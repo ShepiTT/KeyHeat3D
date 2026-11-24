@@ -1,0 +1,88 @@
+# KeyHeat3D
+
+在 Windows 本地统计键盘和鼠标每个按键的使用次数，用 **3D 发光键盘** 或 **2D 平面键盘** 显示热力图。
+
+## 下载
+
+在 [GitHub Releases](https://github.com/ShepiTT/KeyHeat3D/releases/latest) 下载 Windows x64 免安装 EXE，双击运行。
+
+## 功能
+
+- 在后台分别累计每个键的按下次数，左右 `Ctrl` / `Shift` / `Alt` / `Win` 分开计数
+- 长按产生的自动连发会去重，一次物理按下只算一次
+- 统计鼠标左键、右键、中键和两个侧键
+- 可选布局：104 键、87 键（TKL）、75%、65%、60%
+  - 65% 和 60% 左上角的 Esc / ` 键合并显示
+  - 当前布局里没有的键（比如用 60% 布局时按的方向键）仍会计数，排名列表中会标出「当前布局未显示」
+- 3D 视图：键帽上直接显示次数，越常用越亮、越高，并带辉光效果；刚按下的键会闪一下。可拖动旋转、平移、缩放
+- 2D 视图：平面热力图，适合截图
+- 色阶可在对数和线性之间切换（对数能让少用的键也看得出差别）
+- 时间范围：今天、最近 7 天、最近 30 天、全部、自定义日期
+- 悬停任意键可以看次数、占比和排名；侧栏有键盘和鼠标的排名，以及 24 小时分布
+- 导出 CSV（按「小时 × 按键」，带 BOM，Excel 打开不乱码）
+- 关闭窗口后最小化到托盘继续采集；托盘菜单可以暂停采集、立即保存、完全退出
+
+## 隐私
+
+- 只保存「某个小时内某个键按了几次」，**不记录输入内容、按键顺序、窗口或应用**
+- 不联网，数据只存在本机
+- 数据文件：开发运行时在 `data/keyheat.db`；打包后在 `%APPDATA%\KeyHeat3D\data\keyheat.db`。删除这个文件就会清空数据
+
+## 运行
+
+1. 安装 [Node.js LTS](https://nodejs.org/)（20 或更新版本）
+2. 在本目录打开终端：
+
+   ```powershell
+   git clone https://github.com/ShepiTT/KeyHeat3D.git
+   cd KeyHeat3D
+   npm ci
+   npm start
+   ```
+
+   如果安装依赖时下载 Electron 很慢，可以先设置镜像：
+
+   ```powershell
+   $env:ELECTRON_MIRROR="https://npmmirror.com/mirrors/electron/"
+   npm ci
+   ```
+
+3. 打包成免安装的 exe（输出在 `dist\`）：
+
+   ```powershell
+   npm run dist
+   ```
+
+启动参数 `--hidden` 可以不弹出主窗口、直接在托盘运行。
+
+## 注意
+
+- 以管理员权限运行的程序（包括部分游戏）里的按键，需要用管理员身份启动 KeyHeat3D 才能统计到
+- 使用反作弊或独占输入的游戏可能完全收不到按键，本程序不会尝试绕过
+- 数据每 60 秒自动保存一次，退出时也会保存。强制结束进程最多丢失最近 1 分钟
+
+## 目录结构
+
+```
+KeyHeat3D/
+├── assets/icon.png        程序和托盘图标
+├── src/
+│   ├── main/
+│   │   ├── main.js        主进程：窗口、托盘、IPC、CSV 导出
+│   │   ├── capture.js     全局按键采集与去重（uiohook-napi）
+│   │   ├── store.js       SQLite 存储（sql.js）
+│   │   └── preload.js     给界面开放的安全接口
+│   ├── renderer/
+│   │   ├── index.html
+│   │   ├── styles.css
+│   │   └── app.js         3D（Three.js + 辉光）/ 2D 热力图、排名、时间范围
+│   └── shared/
+│       └── layouts.js     各尺寸键盘布局和按键名称
+└── package.json
+```
+
+## 许可证
+
+[MIT](LICENSE)
+
+免安装版使用 libuiohook（LGPL-3.0-or-later）。对应源码、许可文本和重建步骤见[第三方许可说明](THIRD_PARTY_NOTICES.md)。

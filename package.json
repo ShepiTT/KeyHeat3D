@@ -1,0 +1,56 @@
+{
+  "name": "keyheat3d",
+  "version": "0.1.0",
+  "description": "本地键盘/鼠标按键频率统计，3D 发光键盘热力图",
+  "main": "src/main/main.js",
+  "author": "lxx",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "sql.js": "^1.12.0",
+    "three": "^0.170.0",
+    "uiohook-napi": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.lxx.keyheat3d",
+    "productName": "KeyHeat3D",
+    "npmRebuild": false,
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "LICENSE",
+      {
+        "from": "node_modules/three/examples/jsm",
+        "to": "node_modules/three/examples/jsm",
+        "filter": [
+          "controls/OrbitControls.js",
+          "geometries/RoundedBoxGeometry.js",
+          "postprocessing/*.js",
+          "shaders/*.js"
+        ]
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/uiohook-napi/**"
+    ],
+    "extraResources": [
+      "THIRD_PARTY_NOTICES.md",
+      "third-party/**/*"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "assets/icon.png"
+    }
+  }
+}
