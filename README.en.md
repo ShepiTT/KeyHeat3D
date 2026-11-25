@@ -1,6 +1,18 @@
-# KeyHeat3D
+<div align="center">
+  <img src="assets/icon.png" width="80" alt="KeyHeat3D app icon">
+  <h1>Keyboard Heatmap · KeyHeat3D</h1>
+  <p>See which keys you use most.</p>
+  <p>Portable Windows app · 3D and 2D heatmaps · Nine themes · Local stats</p>
+  <p>
+    <a href="https://github.com/ShepiTT/KeyHeat3D/releases/latest">Download latest</a> ·
+    <a href="#screenshots">Screenshots</a> ·
+    <a href="#run-from-source">Run from source</a> ·
+    <a href="#privacy">Privacy</a>
+  </p>
+  <p><a href="README.md">🌐 简体中文</a></p>
+</div>
 
-[简体中文](README.md)
+[![A preview of three KeyHeat3D themes](docs/screenshots/overview.png)](docs/screenshots/README.md)
 
 KeyHeat3D is a Windows desktop app that shows how often you use each key and mouse button. Explore your activity as an interactive 3D keyboard or a flat 2D heatmap. The app interface is in Simplified Chinese.
 
@@ -8,7 +20,7 @@ KeyHeat3D is a Windows desktop app that shows how often you use each key and mou
 
 Download the portable Windows x64 EXE and double-click it to run. [GitHub Releases](https://github.com/ShepiTT/KeyHeat3D/releases/latest)
 
-[![KeyHeat3D's Apple-inspired theme with its 3D keyboard](docs/screenshots/apple-3d.png)](docs/screenshots/README.md)
+## Screenshots
 
 [View all nine themes in 3D and 2D](docs/screenshots/README.md)
 

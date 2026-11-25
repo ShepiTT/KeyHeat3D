@@ -1,6 +1,18 @@
-# KeyHeat3D
+<div align="center">
+  <img src="assets/icon.png" width="80" alt="KeyHeat3D 应用图标">
+  <h1>按键热力图 · KeyHeat3D</h1>
+  <p>看看你最常按哪些键。</p>
+  <p>Windows 免安装 · 3D 与 2D 热力图 · 九种主题 · 本地统计</p>
+  <p>
+    <a href="https://github.com/ShepiTT/KeyHeat3D/releases/latest">下载最新版</a> ·
+    <a href="#界面预览">看界面</a> ·
+    <a href="#运行">本地运行</a> ·
+    <a href="#隐私">隐私</a>
+  </p>
+  <p><a href="README.en.md">🌐 English</a></p>
+</div>
 
-[English](README.en.md)
+[![KeyHeat3D 三种主题的界面预览](docs/screenshots/overview.png)](docs/screenshots/README.md)
 
 在 Windows 本地统计键盘和鼠标各键的使用次数，用 **3D 键盘** 或 **2D 热力图** 展示。
 
@@ -8,7 +20,7 @@
 
 在 [GitHub Releases](https://github.com/ShepiTT/KeyHeat3D/releases/latest) 下载 Windows x64 免安装 EXE，双击运行。
 
-[![KeyHeat3D 苹果风主题的 3D 键盘](docs/screenshots/apple-3d.png)](docs/screenshots/README.md)
+## 界面预览
 
 [查看九种主题的 3D 与 2D 截图](docs/screenshots/README.md)
 
