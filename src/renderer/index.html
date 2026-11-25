@@ -1,11 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- 下方 import map 修改后需重新计算 script-src 的哈希。 -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file: 'sha256-zxfXjT9RNzoaXKJQCFGr5oEKnQYBV4EAQIAuPLH+Wqk='; style-src 'self' file:; style-src-attr 'unsafe-inline'; base-uri 'none'; form-action 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file: 'sha256-zxfXjT9RNzoaXKJQCFGr5oEKnQYBV4EAQIAuPLH+Wqk='; style-src 'self' file:; style-src-attr 'unsafe-inline'; font-src 'self' file:; base-uri 'none'; form-action 'none'">
   <title>KeyHeat3D</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="themes/apple.css">
+  <link rel="stylesheet" href="themes/glass.css">
+  <link rel="stylesheet" href="themes/widget.css">
+  <link rel="stylesheet" href="themes/paper.css">
+  <link rel="stylesheet" href="themes/pixel.css">
+  <link rel="stylesheet" href="themes/cyber.css">
+  <link rel="stylesheet" href="themes/win9x.css">
+  <link rel="stylesheet" href="themes/clay.css">
+  <link rel="stylesheet" href="themes/lcd.css">
   <script type="importmap">
   {
     "imports": {
@@ -16,84 +27,7 @@
   </script>
 </head>
 <body>
-  <header class="toolbar">
-    <div class="brand"><span class="logo"></span>KeyHeat3D</div>
-
-    <div class="group" id="rangeGroup">
-      <button data-range="today" class="active">今天</button>
-      <button data-range="7d">最近 7 天</button>
-      <button data-range="30d">最近 30 天</button>
-      <button data-range="all">全部</button>
-      <button data-range="custom">自定义</button>
-    </div>
-    <div class="group custom" id="customBox" hidden>
-      <input type="date" id="fromDate" /> <span>至</span> <input type="date" id="toDate" />
-    </div>
-
-    <div class="spacer"></div>
-
-    <label class="field">布局
-      <select id="layoutSel"></select>
-    </label>
-    <label class="field">色阶
-      <select id="scaleSel">
-        <option value="log">对数</option>
-        <option value="linear">线性</option>
-      </select>
-    </label>
-    <div class="group" id="viewGroup">
-      <button data-view="3d" class="active">3D</button>
-      <button data-view="2d">2D</button>
-    </div>
-    <button id="exportBtn">导出 CSV</button>
-    <button id="pauseBtn" class="pause"><span class="dot"></span><span id="pauseText">采集中</span></button>
-  </header>
-
-  <main class="layout">
-    <section class="stage">
-      <div id="view3d" class="view"></div>
-      <div id="view2d" class="view" hidden><div id="board2d"></div></div>
-      <div id="tooltip" class="tooltip" hidden></div>
-      <div class="legend">
-        <span>少</span><div class="legend-bar"></div><span>多</span>
-      </div>
-      <div class="hint" id="hint3d">左键拖动旋转 · 右键平移 · 滚轮缩放 · 悬停查看详情</div>
-    </section>
-
-    <aside class="side">
-      <div class="cards">
-        <div class="card"><div class="k">键盘按键</div><div class="v" id="kbTotal">0</div></div>
-        <div class="card"><div class="k">鼠标点击</div><div class="v" id="msTotal">0</div></div>
-        <div class="card"><div class="k">最常用</div><div class="v small" id="topKey">—</div></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">键盘按键 24 小时分布</div>
-        <div id="hourChart" class="hours"></div>
-        <div class="hours-axis"><span>0</span><span>6</span><span>12</span><span>18</span><span>23</span></div>
-      </div>
-
-      <div class="panel grow">
-        <div class="panel-title">
-          排名
-          <div class="tabs" id="rankTabs">
-            <button data-tab="kb" class="active">键盘</button>
-            <button data-tab="mouse">鼠标</button>
-          </div>
-        </div>
-        <div class="rank-head"><span>#</span><span>按键</span><span>次数</span><span>占比</span></div>
-        <div id="rankList" class="rank-list"></div>
-      </div>
-    </aside>
-  </main>
-
-  <footer class="footer">
-    <span>只在本地统计每个键的次数，不记录输入内容和按键顺序。</span>
-    <span class="spacer"></span>
-    <span id="dataPath"></span>
-    <a href="#" id="openData">打开数据目录</a>
-  </footer>
-
+  <div id="app"></div>
   <script type="module" src="app.js"></script>
 </body>
 </html>

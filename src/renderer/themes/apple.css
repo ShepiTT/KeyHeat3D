@@ -1,0 +1,101 @@
+.th-apple {
+  --page-text: #1d1d1f; --page-2: #6e6e73; --page-3: #86868b; --page-hair: rgba(0,0,0,.07);
+  --page-fill: #f0f0f3; --page-green: #34c759;
+  background: #f5f5f7; color: var(--page-text); font-variant-numeric: tabular-nums;
+  font-family: "Segoe UI Variable Display", "Segoe UI", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei UI", sans-serif;
+}
+.th-apple .apple-page { max-width: 1180px; padding: 20px 28px 28px; margin: 0 auto; }
+.th-apple .apple-top { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: start; }
+.th-apple .apple-brand { font-size: 15px; font-weight: 600; letter-spacing: -.01em; padding-top: 4px; white-space: nowrap; }
+.th-apple .apple-top .range-controls { justify-content: center; }
+.th-apple .apple-tools { display: flex; align-items: center; gap: 8px; justify-content: flex-end; flex-wrap: wrap; min-width: 0; }
+.th-apple .seg { background: #e8e8ed; border-radius: 9px; padding: 2px; }
+.th-apple .seg button {
+  border: 0; background: transparent; font-size: 13px; padding: 5px 13px; border-radius: 7px; transition: background .2s ease-in-out;
+}
+.th-apple .seg button.on { background: #fff; font-weight: 500; box-shadow: 0 1px 2px #0002, 0 0 0 .5px #0001; }
+.th-apple select, .th-apple input[type="date"] {
+  background: #fff; border: .5px solid #0003; border-radius: 7px; padding: 5px 8px; font-size: 13px; box-shadow: 0 1px 1px #0001;
+}
+.th-apple .ex, .th-apple .pz, .th-apple .theme-button {
+  background: transparent; border: 0; font-size: 13px; padding: 5px 6px; border-radius: 7px; white-space: nowrap;
+}
+.th-apple .ex { color: var(--ac); }
+.th-apple .ex:hover { text-decoration: underline; }
+.th-apple .pz { color: var(--page-2); }
+.th-apple .pz:hover, .th-apple .theme-button:hover { background: #e8e8ed; }
+
+.th-apple .apple-hero { margin-top: 34px; }
+.th-apple .apple-hero h1 { margin: 0; font-size: clamp(52px, 8.5vw, 92px); font-weight: 600; letter-spacing: -.035em; line-height: 1; }
+.th-apple .apple-hero small { font-size: .24em; font-weight: 500; letter-spacing: 0; color: var(--page-2); margin-left: 10px; }
+.th-apple .apple-hero .lede { font-size: 17px; line-height: 1.5; color: var(--page-2); margin: 12px 0 0; max-width: 680px; }
+.th-apple .lede b { color: var(--page-text); font-weight: 600; }
+
+.th-apple .stage {
+  --stage-height: clamp(300px, 40vw, 470px);
+  margin-top: 26px; background: #fff; border-radius: 22px; height: var(--stage-height);
+}
+.th-apple .board-view-2d { position: absolute; inset: 0 0 42px; padding: 0; }
+.th-apple .stage .stage-foot { position: absolute; padding: 0; left: 24px; right: 24px; bottom: 14px; color: var(--page-3); }
+.th-apple .board { background: #e9eaee; border-radius: calc(var(--u) * .3); }
+.th-apple .key {
+  border-radius: calc(var(--u) * .14); background: #fff; color: var(--page-text);
+  box-shadow: 0 0 0 .5px #0002, 0 1px 1.5px #0002;
+  padding: calc(var(--u) * .09) calc(var(--u) * .11); font-size: calc(var(--u) * .22);
+}
+.th-apple .key.has { background: var(--hc); color: var(--fg); }
+.th-apple .key .c { font-size: calc(var(--u) * .2); color: var(--page-2); font-weight: 600; }
+.th-apple .key.zero .c { color: #c2c2c7; opacity: 1; }
+.th-apple .key.dark .c { color: #ffffffdf; }
+.th-apple .tip { border-radius: 10px; padding: 9px 12px; color: var(--page-2); box-shadow: 0 8px 24px #0002, 0 0 0 .5px #0001; }
+.th-apple .tip b { color: var(--page-text); font-weight: 600; }
+
+.th-apple .apple-grid {
+  margin-top: 18px; display: grid; gap: 18px; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr);
+  grid-template-areas: "rank hours" "rank mods" "rank mouse";
+}
+.th-apple .apple-card { background: #fff; border-radius: 18px; padding: 20px 22px; min-width: 0; }
+.th-apple .apple-card h3 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.th-apple .apple-card .sub { font-size: 13px; color: var(--page-2); opacity: 1; margin: 4px 0 14px; }
+.th-apple .apple-rank { grid-area: rank; }
+.th-apple .apple-hours { grid-area: hours; }
+.th-apple .apple-mods { grid-area: mods; }
+.th-apple .apple-mouse { grid-area: mouse; }
+.th-apple .rk li {
+  grid-template-columns: 24px minmax(0,1fr) 64px 50px; gap: 10px; padding: 10px 0;
+  font-size: 14px; border-top: .5px solid var(--page-hair);
+}
+.th-apple .rk li:first-child { border-top: 0; }
+.th-apple .rk .bar { background: var(--page-fill); height: 4px; border-radius: 2px; }
+.th-apple .rk .bar i { border-radius: 2px; }
+.th-apple .rk .n, .th-apple .rk .pct { color: var(--page-3); opacity: 1; font-size: 13px; }
+.th-apple .hr { height: 84px; }
+.th-apple .hr i { border-radius: 3px 3px 1px 1px; }
+.th-apple .axis { color: var(--page-3); opacity: 1; }
+.th-apple .md { grid-template-columns: 44px minmax(0,1fr); gap: 10px; margin-top: 9px; color: var(--page-2); }
+.th-apple .trk { height: 24px; border-radius: 7px; }
+.th-apple .trk .b { background: #e3e3e8; }
+.th-apple .trk .none { background: var(--page-fill); }
+.th-apple .ms { flex-wrap: nowrap; gap: 22px; }
+.th-apple .ms svg { width: 92px; }
+.th-apple .mz, .th-apple .mo { stroke: #c7c7cc; stroke-width: .8; stroke-opacity: 1; }
+.th-apple .ml li { grid-template-columns: minmax(0,1fr) 64px 46px; gap: 8px; padding: 7px 0; border-top: .5px solid var(--page-hair); }
+.th-apple .ml li:first-child { border-top: 0; }
+.th-apple .ml .p { color: var(--page-3); opacity: 1; }
+.th-apple .data-footer { padding-top: 22px; color: var(--page-3); }
+
+@media (min-width: 1160px) {
+  .th-apple .apple-top { grid-template-columns: minmax(0,1fr) auto minmax(435px,1fr); }
+  .th-apple .apple-tools { gap: 6px; }
+  .th-apple .apple-tools select { width: 119px; padding-inline: 6px; }
+  .th-apple .apple-tools .view-buttons button { padding-inline: 9px; }
+}
+@media (max-width: 860px) {
+  .th-apple .apple-top { grid-template-columns: 1fr; justify-items: start; }
+  .th-apple .apple-top .range-controls, .th-apple .apple-tools { justify-content: flex-start; }
+}
+@media (max-width: 760px) {
+  .th-apple .apple-page { padding: 16px; }
+  .th-apple .apple-grid { grid-template-columns: minmax(0,1fr); grid-template-areas: "rank" "hours" "mods" "mouse"; }
+  .th-apple .ms svg { width: 70px; }
+}

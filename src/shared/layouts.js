@@ -41,14 +41,14 @@ function place(list, x, y, out) {
 function full(withNumpad) {
   const out = [];
   place([K('Escape', 'Esc'), G(1), ...F(1, 4), G(0.5), ...F(5, 8), G(0.5), ...F(9, 12)], 0, 0, out);
-  place([K('PrintScreen', 'PrtSc'), K('ScrollLock', 'ScrLk'), K('Pause', 'Pse')], 15.25, 0, out);
+  place([K('PrintScreen', 'PrtSc'), K('ScrollLock', 'ScrLk'), K('Pause', 'Pause')], 15.25, 0, out);
   const y = 1.25;
   place(ROW_NUM(K('Backquote', '`')), 0, y, out);
   place(ROW_TAB, 0, y + 1, out);
   place(ROW_CAPS, 0, y + 2, out);
   place(ROW_SHIFT(2.75), 0, y + 3, out);
   place(ROW_BOTTOM_FULL, 0, y + 4, out);
-  place([K('Insert', 'Ins'), K('Home', 'Hm'), K('PageUp', 'PgUp')], 15.25, y, out);
+  place([K('Insert', 'Ins'), K('Home', 'Home'), K('PageUp', 'PgUp')], 15.25, y, out);
   place([K('Delete', 'Del'), K('End', 'End'), K('PageDown', 'PgDn')], 15.25, y + 1, out);
   place([K('ArrowUp', '↑')], 16.25, y + 3, out);
   place([K('ArrowLeft', '←'), K('ArrowDown', '↓'), K('ArrowRight', '→')], 15.25, y + 4, out);
@@ -68,7 +68,7 @@ function p75() {
   const out = [];
   place([K('Escape', 'Esc'), ...F(1, 12), K('PrintScreen', 'PrtSc'), K('Insert', 'Ins'), K('Delete', 'Del')], 0, 0, out);
   const y = 1.25;
-  place([...ROW_NUM(K('Backquote', '`')), K('Home', 'Hm')], 0, y, out);
+  place([...ROW_NUM(K('Backquote', '`')), K('Home', 'Home')], 0, y, out);
   place([...ROW_TAB, K('PageUp', 'PgUp')], 0, y + 1, out);
   place([...ROW_CAPS, K('PageDown', 'PgDn')], 0, y + 2, out);
   place([...ROW_SHIFT(1.75), K('ArrowUp', '↑'), K('End', 'End')], 0, y + 3, out);

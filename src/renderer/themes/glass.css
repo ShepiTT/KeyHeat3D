@@ -1,0 +1,244 @@
+.th-glass {
+  border-radius: 22px;
+  overflow: hidden;
+  color: #fff;
+  font-family: -apple-system,"Segoe UI Variable Display","Segoe UI","PingFang SC","Microsoft YaHei UI",sans-serif;
+}
+
+.th-glass .gl {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: #120f1f;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  grid-template-areas: "top top top" "hero hero mouse" "kb kb kb" "rank hours mods";
+}
+
+.th-glass .gl-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.th-glass .gl-bg i {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--ac);
+  opacity: .85;
+}
+
+.th-glass .gl-bg i:nth-child(1) {
+  width: 55%;
+  height: 55%;
+  left: -12%;
+  top: -14%;
+  filter: blur(70px);
+}
+
+.th-glass .gl-bg i:nth-child(2) {
+  width: 48%;
+  height: 50%;
+  right: -12%;
+  top: 22%;
+  filter: blur(80px) hue-rotate(70deg);
+}
+
+.th-glass .gl-bg i:nth-child(3) {
+  width: 60%;
+  height: 45%;
+  left: 18%;
+  bottom: -18%;
+  filter: blur(90px) hue-rotate(-60deg);
+}
+
+.th-glass .gp {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.26);
+  border-radius: 20px;
+  padding: 16px 18px;
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  min-width: 0;
+}
+
+.th-glass .gl-top {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+}
+
+.th-glass .gl-brand {
+  font-size: 15px;
+}
+
+.th-glass .seg {
+  background: rgba(255,255,255,.14);
+  border-radius: 10px;
+  padding: 2px;
+}
+
+.th-glass .seg button {
+  border: 0;
+  background: none;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.th-glass .seg button.on {
+  background: rgba(255,255,255,.92);
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+.th-glass select,
+.th-glass input[type="date"],
+.th-glass .ex,
+.th-glass .pz,
+.th-glass .theme-button {
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.26);
+  border-radius: 9px;
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.th-glass select option {
+  color: #000;
+}
+
+.th-glass .gl-hero {
+  grid-area: hero;
+}
+
+.th-glass .gl-n {
+  font-size: clamp(48px,7vw,84px);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1;
+}
+
+.th-glass .gl-u {
+  font-size: 14px;
+  opacity: .8;
+  margin-top: 6px;
+}
+
+.th-glass .gl-lede {
+  font-size: 15px;
+  opacity: .92;
+  margin-top: 10px!important;
+  max-width: 560px;
+}
+
+.th-glass .gl-mouse {
+  grid-area: mouse;
+}
+
+.th-glass .gl-kb {
+  grid-area: kb;
+  padding: 18px 12px;
+}
+
+.th-glass .gl-rank {
+  grid-area: rank;
+}
+
+.th-glass .gl-hours {
+  grid-area: hours;
+}
+
+.th-glass .gl-mods {
+  grid-area: mods;
+}
+
+.th-glass .key {
+  border-radius: calc(var(--u)*.18);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.9);
+}
+
+.th-glass .key.has {
+  background: var(--hc);
+  color: var(--fg);
+  border-color: rgba(255,255,255,.4);
+}
+
+.th-glass .key.press {
+  transform: scale(.9);
+}
+
+.th-glass .rk li {
+  border-top: 1px solid rgba(255,255,255,.14);
+}
+
+.th-glass .rk li:first-child {
+  border: 0;
+}
+
+.th-glass .rk .bar {
+  background: rgba(255,255,255,.15);
+  border-radius: 3px;
+}
+
+.th-glass .rk .bar i {
+  background: #fff;
+  border-radius: 3px;
+}
+
+.th-glass .hr i {
+  background: rgba(255,255,255,.28);
+  border-radius: 3px 3px 1px 1px;
+}
+
+.th-glass .hr i.peak {
+  background: #fff;
+}
+
+.th-glass .trk {
+  border-radius: 7px;
+  background: rgba(255,255,255,.12);
+}
+
+.th-glass .trk .a {
+  background: rgba(255,255,255,.9);
+  color: #1d1d1f;
+}
+
+.th-glass .ml li {
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+
+.th-glass .ml li:first-child {
+  border: 0;
+}
+
+.th-glass .tip {
+  background: rgba(30,26,45,.82);
+  color: #fff;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.25);
+}
+
+.th-glass .stage[data-view="2d"] {
+  --stage-height: auto;
+}
+
+@media (max-width: 900px) {
+  .th-glass .gl {
+    grid-template-columns: minmax(0,1fr);
+    grid-template-areas: "top" "hero" "mouse" "kb" "rank" "hours" "mods";
+  }
+}
+
+.th-glass .gl > .data-footer { grid-column: 1 / -1; }
+.th-glass .stage { background: transparent; }
+.th-glass .custom input { color-scheme: dark; }

@@ -1,0 +1,265 @@
+.th-cyber {
+  background: #05070d;
+  color: #cfd8ff;
+  font-family: Rajdhani,"Microsoft YaHei UI",sans-serif;
+  font-size: 14px;
+  padding: 16px;
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size: 28px 28px;
+}
+
+.th-cyber .cy {
+  display: grid;
+  grid-template-columns: 190px minmax(0,1fr);
+  gap: 14px;
+}
+
+.th-cyber .cy-side {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 14px;
+  background: #0b0f1a;
+  clip-path: polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+  box-shadow: inset 2px 0 0 var(--ac);
+}
+
+.th-cyber .cy-logo {
+  font-family: Orbitron,sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: .08em;
+  color: #fff;
+}
+
+.th-cyber .cy-logo b {
+  color: var(--ac);
+  text-shadow: 0 0 10px var(--ac);
+}
+
+.th-cyber .cy-lab {
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: #6f7aa6;
+  margin-top: 8px;
+}
+
+.th-cyber .cy-v {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.th-cyber .seg button {
+  background: transparent;
+  border: 1px solid #1f2842;
+  color: #9aa6d6;
+  text-align: left;
+  padding: 6px 10px;
+  font-size: 14px;
+  letter-spacing: .06em;
+  clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+}
+
+.th-cyber .seg button.on {
+  background: color-mix(in srgb,var(--ac) 18%,transparent);
+  border-color: var(--ac);
+  color: #fff;
+  text-shadow: 0 0 8px var(--ac);
+}
+
+.th-cyber select,
+.th-cyber input[type="date"],
+.th-cyber .ex,
+.th-cyber .pz,
+.th-cyber .theme-button {
+  background: #0b0f1a;
+  border: 1px solid #1f2842;
+  color: #cfd8ff;
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.th-cyber select option {
+  background: #0b0f1a;
+}
+
+.th-cyber .pz i {
+  background: var(--ac);
+  box-shadow: 0 0 8px var(--ac);
+}
+
+.th-cyber .cy-foot {
+  margin-top: auto;
+  padding-top: 14px;
+  font-size: 11px;
+  color: #56608a;
+  letter-spacing: .1em;
+  line-height: 1.6;
+}
+
+.th-cyber .cy-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.th-cyber .cy-p {
+  position: relative;
+  background: #0b0f1a;
+  padding: 16px 18px;
+  clip-path: polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  box-shadow: inset 0 0 0 1px #1c2440;
+  min-width: 0;
+}
+
+.th-cyber .cy-p::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 56px;
+  height: 2px;
+  background: var(--ac);
+  box-shadow: 0 0 10px var(--ac);
+}
+
+.th-cyber .cy-hero {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.th-cyber .cy-n {
+  font-family: Orbitron,sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px,6.5vw,72px);
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 22px color-mix(in srgb,var(--ac) 60%,transparent);
+  margin: 6px 0 8px;
+}
+
+.th-cyber .cy-hero p {
+  max-width: 520px;
+  color: #9aa6d6;
+}
+
+.th-cyber .cy-hero b {
+  color: #fff;
+}
+
+.th-cyber .cy-gauge {
+  width: 150px;
+  flex: none;
+}
+
+.th-cyber .cy-gauge .lit {
+  filter: drop-shadow(0 0 3px var(--ac));
+}
+
+.th-cyber .cy-row {
+  display: grid;
+  grid-template-columns: minmax(0,1.15fr) minmax(0,1fr) minmax(0,.9fr);
+  gap: 14px;
+}
+
+.th-cyber h3 {
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: .04em;
+  color: #fff;
+}
+
+.th-cyber .key {
+  border-radius: 2px;
+  background: #0f1526;
+  border: 1px solid #1f2842;
+  color: #7f8bba;
+}
+
+.th-cyber .key.has {
+  background: var(--hc);
+  color: var(--fg);
+  border-color: transparent;
+  box-shadow: 0 0 calc(var(--t) * 14px) var(--hc);
+}
+
+.th-cyber .key.press {
+  filter: brightness(1.8);
+}
+
+.th-cyber .rk li {
+  border-top: 1px solid #141b30;
+}
+
+.th-cyber .rk li:first-child {
+  border: 0;
+}
+
+.th-cyber .rk .bar {
+  background: #141b30;
+}
+
+.th-cyber .rk .bar i {
+  background: var(--ac);
+  box-shadow: 0 0 8px var(--ac);
+}
+
+.th-cyber .hr i {
+  background: #1a2240;
+}
+
+.th-cyber .hr i.peak {
+  background: var(--ac);
+  box-shadow: 0 0 10px var(--ac);
+}
+
+.th-cyber .trk {
+  background: #141b30;
+}
+
+.th-cyber .trk .a {
+  background: var(--ac);
+  color: #05070d;
+  font-weight: 700;
+}
+
+.th-cyber .mo,
+.th-cyber .mz {
+  stroke: #6f7aa6;
+  stroke-opacity: 1;
+}
+
+.th-cyber .tip {
+  background: #0b0e16;
+  color: #cfd8ff;
+  border: 1px solid var(--ac);
+  border-radius: 0;
+  font-family: Rajdhani,sans-serif;
+  font-size: 14px;
+}
+
+.th-cyber .stage[data-view="2d"] {
+  --stage-height: auto;
+}
+
+@media (max-width: 900px) {
+  .th-cyber .cy,
+  .th-cyber .cy-row {
+    grid-template-columns: minmax(0,1fr);
+  }
+}
+
+.th-cyber .cy-side .range-controls { align-items: stretch; flex-direction: column; }
+.th-cyber .cy-side .custom { flex-direction: column; align-items: stretch; }
+.th-cyber .cy-side .custom input { color-scheme: dark; width: 100%; }
+.th-cyber .cy-side .theme-button { justify-content: flex-start; }
+.th-cyber .stage { background: #05070d; }
+.th-cyber .cy-mods { margin-top: 16px; }
+.th-cyber .scale-buttons button { padding: 2px 6px; font-size: 12px; }
+.th-cyber .cy-row .rk li { column-gap: 5px; grid-template-columns: 16px minmax(0, 1fr) 50px 42px; }

@@ -53,7 +53,7 @@ function createWindow() {
     height: 880,
     minWidth: 1000,
     minHeight: 640,
-    backgroundColor: '#07090d',
+    backgroundColor: '#f5f5f7',
     title: 'KeyHeat3D',
     icon: ICON,
     autoHideMenuBar: true,
