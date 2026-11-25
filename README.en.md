@@ -8,6 +8,10 @@ KeyHeat3D is a Windows desktop app that shows how often you use each key and mou
 
 Download the portable Windows x64 EXE and double-click it to run. [GitHub Releases](https://github.com/ShepiTT/KeyHeat3D/releases/latest)
 
+[![KeyHeat3D's Apple-inspired theme with its 3D keyboard](docs/screenshots/apple-3d.png)](docs/screenshots/README.md)
+
+[View all nine themes in 3D and 2D](docs/screenshots/README.md)
+
 ## Features
 
 - Nine themes with distinct 3D keycap materials and matching 2D views. Choose Apple-inspired, Glass, Widgets, Paper & Ink, Pixel, Cyberpunk, Win9x, Clay, or LCD, and pair any theme with one of eight accent colors.

@@ -8,6 +8,10 @@
 
 在 [GitHub Releases](https://github.com/ShepiTT/KeyHeat3D/releases/latest) 下载 Windows x64 免安装 EXE，双击运行。
 
+[![KeyHeat3D 苹果风主题的 3D 键盘](docs/screenshots/apple-3d.png)](docs/screenshots/README.md)
+
+[查看九种主题的 3D 与 2D 截图](docs/screenshots/README.md)
+
 ## 功能
 
 - 在后台分别累计每个键的按下次数，左右 `Ctrl` / `Shift` / `Alt` / `Win` 分开计数
