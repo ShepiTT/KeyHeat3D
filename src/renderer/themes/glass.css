@@ -1,5 +1,5 @@
 .th-glass {
-  border-radius: 22px;
+  background: #120f1f;
   overflow: hidden;
   color: #fff;
   font-family: -apple-system,"Segoe UI Variable Display","Segoe UI","PingFang SC","Microsoft YaHei UI",sans-serif;
@@ -153,17 +153,19 @@
 
 .th-glass .gl-hours {
   grid-area: hours;
+  align-self: start;
 }
 
 .th-glass .gl-mods {
   grid-area: mods;
+  align-self: start;
 }
 
 .th-glass .key {
   border-radius: calc(var(--u)*.18);
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.18);
-  color: rgba(255,255,255,.9);
+  background: #e3e1e8;
+  border: 1px solid #d0ccd9;
+  color: #332d40;
 }
 
 .th-glass .key.has {

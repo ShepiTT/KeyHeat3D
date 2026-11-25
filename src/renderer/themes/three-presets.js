@@ -1,7 +1,7 @@
 import { mix } from './shared.js';
 
 const SYSTEM = '-apple-system, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", sans-serif';
-const SERIF = '"Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif';
+const SERIF = 'Georgia, "KeyHeat Paper CJK", "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif';
 const studio = {
   environment: true,
   main: { intensity: 1.1, position: [-7, 18, 11] },
@@ -27,7 +27,7 @@ export const THREE_PRESETS = {
   glass: {
     background: null,
     base: { height: 0.46, radius: 0.19, segments: 4, color: '#ffffff', roughness: 0.4, opacity: 0.35 },
-    cap: { height: 0.32, radius: 0.12, segments: 4, color: '#ffffff', roughness: 0.15, opacity: 0.45 },
+    cap: { height: 0.32, radius: 0.12, segments: 4, color: '#ffffff', coldTop: '#e3e1e8', roughness: 0.15, opacity: 0.45 },
     lighting: { environment: true, main: { intensity: 1, position: [-7, 18, 11] } },
     text: { ...studioText, family: '-apple-system, "Segoe UI Variable Display", "Segoe UI", "Microsoft YaHei UI", sans-serif' },
     press: { type: 'sink', depth: 0.12 },
@@ -52,7 +52,7 @@ export const THREE_PRESETS = {
       ambient: 0.7,
       shadow: { opacity: 0.15 },
     },
-    text: { family: SERIF, keyWeight: 500, countWeight: 600, keySize: 37 },
+    text: { family: SERIF, keyWeight: 600, countWeight: 700 },
     press: { type: 'sink', depth: 0.08 },
   },
   pixel: {
@@ -61,13 +61,17 @@ export const THREE_PRESETS = {
     base: { height: 0.42, color: '#000000', kind: 'lambert' },
     cap: { height: 0.4, color: '#29366f', kind: 'lambert' },
     lighting: { main: { intensity: 0.92, position: [-7, 18, 11] }, ambient: 0.52 },
-    text: { family: '"Press Start 2P", SimSun, monospace', keyWeight: 400, countWeight: 400, keySize: 40, countSize: 37 },
+    text: {
+      family: '"Press Start 2P", "KeyHeat Pixel CJK", SimSun, monospace', keyWeight: 400,
+      countFamily: 'VT323, "KeyHeat Pixel CJK", SimSun, monospace', countWeight: 400, countSize: 49,
+    },
     press: { type: 'step', depth: 0.15, duration: 100 },
   },
   cyber: {
     background: '#05070d',
     grid: true,
-    bloom: true,
+    // 热度顶面和文字在 0–1，只有高于 1 的发光边缘进入泛光。
+    bloom: { strength: 0.3, radius: 0.25, threshold: 1.05 },
     base: { height: 0.42, radius: 0.09, segments: 2, color: '#0b0f1a', metalness: 0.8, roughness: 0.3, rim: true },
     cap: { height: 0.3, radius: 0.04, segments: 2, color: '#0f1526', metalness: 0.6, roughness: 0.35 },
     lighting: {
@@ -107,7 +111,7 @@ export const THREE_PRESETS = {
     polarRange: [0.05, 0.5],
     scanlines: true,
     cap: { height: 0.1, color: (accent) => mix(screen(accent), LCD_INK, 0.12), kind: 'basic' },
-    text: { family: 'VT323, "Microsoft YaHei UI", monospace', keyWeight: 400, countWeight: 400, keySize: 56, countSize: 52 },
+    text: { family: 'VT323, "KeyHeat LCD CJK", "Microsoft YaHei UI", monospace', keyWeight: 400, countWeight: 400, keySize: 56, countSize: 52 },
     press: { type: 'ink', duration: 150 },
   },
 };

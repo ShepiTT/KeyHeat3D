@@ -77,3 +77,31 @@
   font-display: block;
   src: url('./nunito-latin-900-normal.woff2') format('woff2');
 }
+
+@font-face {
+  font-family: 'KeyHeat Pixel CJK';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('./keyheat-pixel-cjk.woff2') format('woff2');
+  unicode-range: U+3000-303F, U+3400-9FFF, U+F900-FAFF, U+FF01-FF60, U+FFE5, U+20000-2FA1F;
+}
+
+@font-face {
+  font-family: 'KeyHeat LCD CJK';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  size-adjust: 85%;
+  src: url('./keyheat-lcd-cjk.woff2') format('woff2');
+  unicode-range: U+3000-303F, U+3400-9FFF, U+F900-FAFF, U+FF01-FF60, U+FFE5, U+20000-2FA1F;
+}
+
+@font-face {
+  font-family: 'KeyHeat Paper CJK';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('./keyheat-paper-cjk.woff2') format('woff2');
+  unicode-range: U+3000-303F, U+3400-9FFF, U+F900-FAFF, U+FF01-FF60, U+FFE5, U+20000-2FA1F;
+}

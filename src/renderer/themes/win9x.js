@@ -8,13 +8,20 @@ export default {
   template: () => `
     <div class="w9-win">
       <div class="w9-title">
-        <span class="w9-ico" aria-hidden="true"></span>KeyHeat3D - 按键统计<span class="sp"></span>
-        <span class="w9-tb" aria-hidden="true">_</span><span class="w9-tb" aria-hidden="true">□</span><span class="w9-tb" aria-hidden="true">×</span>
+        <span class="w9-ico" aria-hidden="true"></span>KeyHeat3D - 按键统计
       </div>
-      <div class="w9-menu" aria-hidden="true"><span><u>文</u>件</span><span><u>编</u>辑</span><span><u>查</u>看</span><span><u>帮</u>助</span></div>
+      <div class="w9-menu" role="group" aria-label="文件与视图">
+        <details class="w9-file">
+          <summary accesskey="f">文件(<u>F</u>)</summary>
+          <div class="w9-file-panel">${exportBtn()}</div>
+        </details>
+        <div class="w9-views" role="group" aria-label="查看">
+          <span aria-hidden="true">查看</span>${viewButtons()}
+        </div>
+      </div>
       <div class="w9-tool">
-        ${ranges()}<span class="w9-sep"></span><label>布局 ${layoutSel()}</label>${viewButtons()}
-        <span class="w9-sep"></span>${exportBtn()}${pauseBtn()}${themeBtn()}
+        ${ranges()}<span class="w9-sep"></span><label>布局 ${layoutSel()}</label>
+        <span class="w9-sep"></span>${pauseBtn()}${themeBtn()}
       </div>
       <div class="w9-body">
         <fieldset class="w9-g"><legend>键盘</legend><div class="kbwrap" data-s="kb"></div></fieldset>

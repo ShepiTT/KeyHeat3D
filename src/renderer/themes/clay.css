@@ -1,7 +1,7 @@
 .th-clay {
   background: var(--cb);
-  border-radius: 28px;
-  padding: 22px;
+  --theme-gutter: 22px;
+  padding-block: 22px;
   color: #2d2640;
   font-family: Nunito,"PingFang SC","Microsoft YaHei UI",sans-serif;
   font-weight: 600;
@@ -231,5 +231,6 @@
 }
 
 .th-clay .stage { background: var(--cb); }
+.th-clay .cl-row { align-items: start; }
 .th-clay .scale-buttons button { padding: 3px 7px; font-size: 11px; }
 .th-clay .cl-topk b { overflow-wrap: anywhere; }

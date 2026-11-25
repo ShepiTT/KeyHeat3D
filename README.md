@@ -12,7 +12,9 @@
   <p><a href="README.en.md">🌐 English</a></p>
 </div>
 
-[![KeyHeat3D 三种主题的界面预览](docs/screenshots/overview.png)](docs/screenshots/README.md)
+[![KeyHeat3D 纸墨主题的 3D 键盘热力图](docs/screenshots/hero-3d.png)](docs/screenshots/README.md)
+
+示例画面中，今天按了 3,923 次键，最常按的是 **A**。
 
 在 Windows 本地统计键盘和鼠标各键的使用次数，用 **3D 键盘** 或 **2D 热力图** 展示。
 
@@ -21,6 +23,8 @@
 在 [GitHub Releases](https://github.com/ShepiTT/KeyHeat3D/releases/latest) 下载 Windows x64 免安装 EXE，双击运行。
 
 ## 界面预览
+
+[![玻璃、苹果风和纸墨主题的 3D 预览](docs/screenshots/overview.png)](docs/screenshots/README.md)
 
 [查看九种主题的 3D 与 2D 截图](docs/screenshots/README.md)
 
@@ -32,9 +36,9 @@
 - 可选布局：104 键、87 键（TKL）、75%、65%、60%
   - 65% 和 60% 左上角的 Esc / ` 键合并显示
   - 当前布局里没有的键（比如用 60% 布局时按的方向键）仍会计数，排名列表中会标出「当前布局未显示」
-- 3D 视图：键帽显示次数和热度。可拖动旋转、用滚轮缩放，键帽材质和按下反馈随主题变化
+- 3D 视图：常用键的键帽更高，帽面颜色对应图例。可拖动旋转、用滚轮缩放，键帽材质和按下反馈随主题变化
 - 2D 视图：平面热力图，适合截图
-- 九种主题：苹果风、玻璃、小组件、纸墨、像素、赛博朋克、千禧、黏土、液晶。每种主题均支持 3D 和 2D，可独立搭配八种强调色，重启后恢复上次选择
+- 九种主题：苹果风、玻璃、小组件、纸墨、像素、赛博朋克、千禧、黏土、液晶。每种主题都有默认配色，也可以选用一种强调色统一覆盖所有主题
 - 色阶可在对数和线性之间切换（对数能让少用的键也看得出差别）
 - 时间范围：今天、最近 7 天、最近 30 天、全部、自定义日期
 - 悬停任意键可以看次数、占比和排名；侧栏有键盘和鼠标的排名，以及 24 小时分布

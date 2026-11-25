@@ -16,7 +16,7 @@ export default {
         <b class="num" data-s="total"></b>
         <span class="wf" data-s="rlabel"></span>
       </section>
-      <section class="w w-rings"><div class="rings" data-s="rings"></div></section>
+      <section class="w w-rings" aria-label="键盘按键占比"><div class="rings" data-s="rings"></div></section>
       <section class="w s w-top">
         <span class="wl">最常用</span>
         <b class="w-glyph" data-s="topGlyph"></b>

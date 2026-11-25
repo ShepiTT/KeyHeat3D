@@ -3,7 +3,8 @@
   color: #cfd8ff;
   font-family: Rajdhani,"Microsoft YaHei UI",sans-serif;
   font-size: 14px;
-  padding: 16px;
+  --theme-gutter: 16px;
+  padding-block: 16px;
   background-image: linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
   background-size: 28px 28px;
 }
@@ -260,6 +261,7 @@
 .th-cyber .cy-side .custom input { color-scheme: dark; width: 100%; }
 .th-cyber .cy-side .theme-button { justify-content: flex-start; }
 .th-cyber .stage { background: #05070d; }
+.th-cyber .cy-row > section { align-self: start; }
 .th-cyber .cy-mods { margin-top: 16px; }
 .th-cyber .scale-buttons button { padding: 2px 6px; font-size: 12px; }
 .th-cyber .cy-row .rk li { column-gap: 5px; grid-template-columns: 16px minmax(0, 1fr) 50px 42px; }

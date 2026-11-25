@@ -11,6 +11,18 @@ export const ACCENTS = [
   ['橙', '#ff8a00'], ['黄', '#f2b705'], ['绿', '#22a95b'], ['石墨', '#5b6270'],
 ];
 
+export const THEME_ACCENTS = {
+  apple: '#0071e3',
+  glass: '#a38bfa',
+  widget: '#87baff',
+  paper: '#b1413a',
+  pixel: '#ffbe0b',
+  cyber: '#22cfee',
+  win9x: '#3165a7',
+  clay: '#b5a0f2',
+  lcd: '#495639',
+};
+
 function channels(color) {
   return [1, 3, 5].map((offset) => Number.parseInt(color.slice(offset, offset + 2), 16));
 }
@@ -65,7 +77,7 @@ export function stage() {
     <div class="board-view board-view-2d" data-s="view2d" hidden><div class="board" data-s="board2d"></div></div>
     <footer class="stage-foot sfoot"><div class="stage-tools"><span class="heat-legend">少<i class="ramp"></i>多</span>
       <div class="scale-buttons seg" aria-label="色阶"><button type="button" data-scale="log">对数</button>
-      <button type="button" data-scale="linear">线性</button></div></div><span class="stage-hint" data-s="hint"></span></footer>
+      <button type="button" data-scale="linear">线性</button></div></div><span class="stage-hint" data-s="hint" role="status"></span></footer>
     <div class="tip" data-s="tip" hidden></div>
   </section>`;
 }

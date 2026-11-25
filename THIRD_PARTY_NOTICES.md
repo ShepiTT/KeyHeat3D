@@ -3,9 +3,10 @@
 KeyHeat3D 使用 `uiohook-napi` 1.5.5 采集键鼠按下事件。其 MIT 许可的 Node.js 包装层将 libuiohook 静态链接到原生模块。libuiohook 由 Alexander Barker 等作者开发，按 LGPL-3.0-or-later 分发。
 
 - libuiohook [作者名单](third-party/libuiohook/AUTHORS)、[GNU GPL v3](third-party/libuiohook/COPYING.md) 和 [GNU LGPL v3](third-party/libuiohook/COPYING.LESSER.md)
-- [发行版对应源码 ZIP](https://github.com/ShepiTT/KeyHeat3D/releases/download/v0.2.0/uiohook-napi-1.5.5-source.zip) 包含包装层、构建配置和随 1.5.5 发布的 libuiohook 源码，保留该版本对上游源码的修改。材料来自 [npm 1.5.5 包](https://registry.npmjs.org/uiohook-napi/-/uiohook-napi-1.5.5.tgz)和[包装层上游提交](https://github.com/SnosMe/uiohook-napi/tree/44e0d868ac6fedd2a68c7f8ad8163c73a3f36fc3)。
+- [发行版对应源码 ZIP](https://github.com/ShepiTT/KeyHeat3D/releases/download/v0.2.1/uiohook-napi-1.5.5-source.zip) 包含包装层、构建配置和随 1.5.5 发布的 libuiohook 源码，保留该版本对上游源码的修改。材料来自 [npm 1.5.5 包](https://registry.npmjs.org/uiohook-napi/-/uiohook-napi-1.5.5.tgz)和[包装层上游提交](https://github.com/SnosMe/uiohook-napi/tree/44e0d868ac6fedd2a68c7f8ad8163c73a3f36fc3)。
 - Electron 和 Chromium 的许可证在免安装包内的 `LICENSE.electron.txt` 和 `LICENSES.chromium.html`，对应版本为 [Electron 33.4.11](https://github.com/electron/electron/tree/v33.4.11)。其他运行依赖的版本记录在 `package-lock.json`，许可证随各包分发。
 - 界面本地字体使用 SIL Open Font License 1.1，各字体的许可文本随 [字体文件](src/renderer/fonts/) 分发。
+- 像素与液晶的中文子集分别基于 [Fusion Pixel 12px 和 10px 比例简体](https://github.com/TakWolf/fusion-pixel-font/releases/tag/2026.11.10)，纸墨的中文子集基于 [Noto Serif SC](https://github.com/google/fonts/tree/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/notoserifsc)。子集采用独立的 KeyHeat 字体名，与原始字体的许可文本一同分发。
 
 ## 在 Windows x64 重建原生模块
 

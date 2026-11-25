@@ -1,10 +1,12 @@
 .th-lcd {
   --ink: #1b2412;
+  --theme-gutter: 18px;
+  --lcd-digits: VT323,"KeyHeat LCD CJK","Microsoft YaHei UI",monospace;
+  --lcd-label: "Segoe UI","KeyHeat LCD CJK","Microsoft YaHei UI","PingFang SC",sans-serif;
   background: #2b2d30;
-  border-radius: 18px;
-  padding: 18px;
+  padding-block: 18px;
   color: #d7d9dc;
-  font-family: "Microsoft YaHei UI","PingFang SC",sans-serif;
+  font-family: var(--lcd-label);
 }
 
 .th-lcd .lc-dev {
@@ -61,8 +63,8 @@
 }
 
 .th-lcd .lc-lab {
-  font-size: 11px;
-  letter-spacing: .1em;
+  font-size: 13px;
+  letter-spacing: .055em;
   opacity: .75;
 }
 
@@ -76,7 +78,7 @@
 .th-lcd .lc-side {
   display: grid;
   gap: 8px;
-  font-family: VT323,monospace;
+  font-family: var(--lcd-digits);
   font-size: 20px;
   min-width: 200px;
 }
@@ -91,7 +93,7 @@
 }
 
 .th-lcd .lc-side .lc-lab {
-  font-family: "Microsoft YaHei UI",sans-serif;
+  font-family: var(--lcd-label);
 }
 
 .th-lcd .lc-side b {
@@ -127,7 +129,7 @@
 .th-lcd .lc-ticks {
   display: flex;
   justify-content: space-between;
-  font-family: VT323,monospace;
+  font-family: var(--lcd-digits);
   font-size: 15px;
   border-top: 2px solid var(--ink);
   padding-top: 7px;
@@ -139,7 +141,7 @@
   background: transparent;
   border: 1px solid rgba(27,36,18,.28);
   color: rgba(27,36,18,.62);
-  font-family: VT323,monospace;
+  font-family: var(--lcd-digits);
   font-size: max(11px,calc(var(--u)*.34));
 }
 
@@ -162,7 +164,11 @@
   gap: 8px;
   align-items: center;
   flex-wrap: wrap;
-  margin: 14px 0;
+  margin: 0 0 14px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #2b2d30;
+  box-shadow: inset 0 1px 3px #0005;
 }
 
 .th-lcd .seg {
@@ -201,6 +207,8 @@
   display: grid;
   grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
   gap: 14px;
+  margin-top: 14px;
+  align-items: start;
 }
 
 .th-lcd .lc-scr2 {
@@ -209,14 +217,14 @@
   border-radius: 8px;
   padding: 14px 16px;
   box-shadow: inset 0 3px 8px rgba(0,0,0,.35);
-  font-family: VT323,monospace;
+  font-family: var(--lcd-digits);
   font-size: 17px;
   min-width: 0;
 }
 
 .th-lcd .lc-scr2 h3,
 .th-lcd .lc-scr2 .sub {
-  font-family: "Microsoft YaHei UI",sans-serif;
+  font-family: var(--lcd-label);
 }
 
 .th-lcd .lc-scr2 h3 {
@@ -265,7 +273,7 @@
   background: #1b2412;
   color: #c9d4ae;
   border-radius: 4px;
-  font-family: VT323,monospace;
+  font-family: var(--lcd-digits);
   font-size: 16px;
 }
 
@@ -282,6 +290,18 @@
   .th-lcd .lc-lower {
     grid-template-columns: minmax(0,1fr);
   }
+}
+
+@media (max-height: 720px) {
+  .th-lcd { padding-block: 10px; }
+  .th-lcd .lc-dev { padding-block: 12px; }
+  .th-lcd .lc-head { margin-bottom: 8px; }
+  .th-lcd .lc-panel { margin-bottom: 10px; }
+  .th-lcd .lc-screen { padding-block: 12px; }
+  .th-lcd .seg7 { height: 46px; }
+  .th-lcd .lc-scale { margin-block: 9px; }
+  .th-lcd .hr { height: 38px; }
+  .th-lcd .stage[data-view="3d"] { --stage-height: 285px; }
 }
 
 .th-lcd .stage { background: transparent; }

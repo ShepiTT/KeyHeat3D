@@ -23,7 +23,16 @@
 .th-apple .ex { color: var(--ac); }
 .th-apple .ex:hover { text-decoration: underline; }
 .th-apple .pz { color: var(--page-2); }
-.th-apple .pz:hover, .th-apple .theme-button:hover { background: #e8e8ed; }
+.th-apple .pz:hover { background: #e8e8ed; }
+.th-apple .theme-button {
+  padding-inline: 7px; border: 1px solid #dadce1; background: #fff;
+}
+.th-apple .theme-button:hover, .th-apple .theme-button[aria-expanded="true"] { background: #ededef; }
+.th-apple .theme-button .accent-dot { width: 10px; height: 10px; border-radius: 3px; }
+.th-apple .theme-button::after {
+  content: ""; width: 5px; height: 5px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); margin: 0 1px 0 2px;
+}
 
 .th-apple .apple-hero { margin-top: 34px; }
 .th-apple .apple-hero h1 { margin: 0; font-size: clamp(52px, 8.5vw, 92px); font-weight: 600; letter-spacing: -.035em; line-height: 1; }
@@ -85,10 +94,17 @@
 .th-apple .data-footer { padding-top: 22px; color: var(--page-3); }
 
 @media (min-width: 1160px) {
-  .th-apple .apple-top { grid-template-columns: minmax(0,1fr) auto minmax(435px,1fr); }
+  .th-apple .apple-top { grid-template-columns: minmax(80px,1fr) minmax(0,max-content) max-content; }
   .th-apple .apple-tools { gap: 6px; }
-  .th-apple .apple-tools select { width: 119px; padding-inline: 6px; }
   .th-apple .apple-tools .view-buttons button { padding-inline: 9px; }
+}
+@media (max-height: 720px) {
+  .th-apple .apple-page { padding-top: 13px; }
+  .th-apple .apple-hero { margin-top: 18px; }
+  .th-apple .apple-hero h1 { font-size: clamp(40px, 7vh, 60px); }
+  .th-apple .apple-hero .lede { font-size: 14px; margin-top: 6px; }
+  .th-apple .stage { margin-top: 14px; }
+  .th-apple .stage[data-view="3d"] { --stage-height: clamp(255px, calc(100vh - 230px), 420px); }
 }
 @media (max-width: 860px) {
   .th-apple .apple-top { grid-template-columns: 1fr; justify-items: start; }

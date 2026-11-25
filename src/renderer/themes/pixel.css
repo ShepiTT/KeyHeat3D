@@ -1,10 +1,13 @@
 .th-pixel {
   background: #1d2b53;
   color: #fff1e8;
-  padding: 18px;
-  font-family: "Press Start 2P","SimSun",monospace;
-  font-size: 10px;
-  line-height: 1.7;
+  --theme-gutter: 18px;
+  --pixel-font: "Press Start 2P","KeyHeat Pixel CJK","Microsoft YaHei UI",monospace;
+  --pixel-digits: VT323,"KeyHeat Pixel CJK","Microsoft YaHei UI",monospace;
+  padding-block: 18px;
+  font-family: var(--pixel-font);
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .th-pixel,
@@ -32,7 +35,7 @@
 
 .th-pixel .px-cell > span {
   display: block;
-  font-size: 8px;
+  font-size: 10px;
   color: #ffa300;
   margin-bottom: 8px;
 }
@@ -63,7 +66,7 @@
   background: #5f574f;
   border: 0;
   padding: 6px 8px;
-  font-size: 9px;
+  font-size: 11px;
   box-shadow: inset 0 -3px 0 rgba(0,0,0,.45);
 }
 
@@ -80,7 +83,7 @@
   background: #000;
   border: 0;
   padding: 8px 10px;
-  font-size: 9px;
+  font-size: 11px;
   margin: 3px;
   box-shadow: 0 -3px 0 #c2c3c7,0 3px 0 #c2c3c7,-3px 0 0 #c2c3c7,3px 0 0 #c2c3c7;
 }
@@ -93,7 +96,7 @@
 }
 
 .th-pixel .px-blink {
-  font-size: 9px;
+  font-size: 11px;
   color: #ffec27;
   margin-left: auto;
 }
@@ -128,8 +131,8 @@
 }
 
 .th-pixel .sub {
-  font-size: 8px;
-  line-height: 1.8;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .th-pixel .key {
@@ -137,11 +140,12 @@
   background: #29366f;
   color: #c2c3c7;
   box-shadow: inset -2px -2px 0 rgba(0,0,0,.45),inset 2px 2px 0 rgba(255,255,255,.12);
-  font-size: max(7px,calc(var(--u)*.2));
+  font-size: max(8px,calc(var(--u)*.23));
 }
 
 .th-pixel .key .c {
-  font-size: max(7px,calc(var(--u)*.18));
+  font-family: var(--pixel-digits);
+  font-size: max(10px,calc(var(--u)*.28));
 }
 
 .th-pixel .key.has {
@@ -154,9 +158,14 @@
 }
 
 .th-pixel .rk li {
-  grid-template-columns: 22px minmax(0,1fr) 58px 50px;
+  grid-template-columns: 22px minmax(0,1fr) minmax(58px,max-content) 52px;
   padding: 5px 0;
-  font-size: 9px;
+  font-size: 11px;
+}
+
+.th-pixel .rk .cnt, .th-pixel .rk .pct, .th-pixel .ml .c, .th-pixel .ml .p {
+  font-family: var(--pixel-digits);
+  font-size: 15px;
 }
 
 .th-pixel .rk .bar {
@@ -181,15 +190,16 @@
 }
 
 .th-pixel .axis {
-  font-size: 8px;
+  font-family: var(--pixel-digits);
+  font-size: 14px;
 }
 
 .th-pixel .md {
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .th-pixel .trk {
-  height: 18px;
+  height: 22px;
   background: #29366f;
 }
 
@@ -200,7 +210,9 @@
 
 .th-pixel .trk .a,
 .th-pixel .trk .b {
-  font-size: 8px;
+  font-family: var(--pixel-digits);
+  font-size: 14px;
+  line-height: 1;
 }
 
 .th-pixel .mo,
@@ -212,7 +224,7 @@
 }
 
 .th-pixel .ml li {
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .th-pixel .tip {
@@ -220,7 +232,7 @@
   color: #fff1e8;
   border-radius: 0;
   box-shadow: 0 -3px 0 #c2c3c7,0 3px 0 #c2c3c7,-3px 0 0 #c2c3c7,3px 0 0 #c2c3c7;
-  font-family: VT323,monospace;
+  font-family: var(--pixel-digits);
   font-size: 16px;
 }
 
@@ -246,7 +258,7 @@
 
 .th-pixel .stage { background: #000000; }
 .th-pixel .stage canvas { image-rendering: pixelated; }
-.th-pixel .scale-buttons button { padding: 3px 4px; font-size: 8px; }
+.th-pixel .scale-buttons button { padding: 3px 4px; }
 .th-pixel .custom input { color-scheme: dark; }
 @media (prefers-reduced-motion: no-preference) {
   .th-pixel .px-blink { animation: keyheat-pixel-blink 1.1s steps(2, jump-none) infinite; }

@@ -14,6 +14,7 @@ export default {
         <span class="lc-brand">KEYHEAT·3D</span><span>KH-104 按键计数器</span>
         <span class="sp"></span><span data-s="pzt2"></span><span class="lc-led" aria-hidden="true"></span>
       </header>
+      <div class="lc-panel" role="group" aria-label="统计与视图控制">${ranges()}${ctlL()}</div>
       <div class="lc-screen">
         <div class="lc-top">
           <div class="lc-count">
@@ -32,7 +33,6 @@ export default {
         </div>
         <div class="kbwrap" data-s="kb"></div>
       </div>
-      <div class="lc-panel">${ranges()}${ctlL()}</div>
       <div class="lc-lower">
         <section class="lc-scr2">${blocks.rank()}</section>
         <section class="lc-scr2">

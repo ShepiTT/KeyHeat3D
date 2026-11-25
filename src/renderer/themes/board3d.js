@@ -13,6 +13,7 @@ const LABEL_PIXELS = 180;
 const CAP_GAP = 0.12;
 const LABEL_INSET = 0.24;
 const HOVER_LIFT = 0.035;
+const MAX_HEAT_LIFT = 0.72;
 const ZERO_GLOW = new THREE.Color(0, 0, 0);
 const INK = new THREE.Color(LCD_INK);
 
@@ -33,6 +34,31 @@ function boxMaterial(preset, color, gradientMap) {
   if (kind === 'lambert') return new THREE.MeshLambertMaterial({ color, flatShading: true });
   if (kind === 'basic') return new THREE.MeshBasicMaterial({ color });
   return new THREE.MeshStandardMaterial({ color, roughness, metalness, envMapIntensity });
+}
+
+function paintableTop(material, coldColor, coldTop) {
+  if (material.isMeshBasicMaterial) return null;
+  const color = { value: new THREE.Color(coldTop ?? coldColor) };
+  const coverage = { value: coldTop ? 1 : 0 };
+  material.onBeforeCompile = (shader) => {
+    shader.uniforms.keyTopColor = color;
+    shader.uniforms.keyTopCoverage = coverage;
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying float vKeyTop;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvKeyTop = normal.y;');
+    // 顶面直接显示色阶，倒角和侧壁仍由主题光照、材质和阴影塑形。
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', `#include <common>
+        varying float vKeyTop;
+        uniform vec3 keyTopColor;
+        uniform float keyTopCoverage;`)
+      .replace('#include <opaque_fragment>', `
+        float topFace = smoothstep(0.92, 0.995, vKeyTop) * keyTopCoverage;
+        outgoingLight = mix(outgoingLight, keyTopColor, topFace);
+        diffuseColor.a = mix(diffuseColor.a, 1.0, topFace);
+        #include <opaque_fragment>`);
+  };
+  return { color, coverage };
 }
 
 function clearGroup(group) {
@@ -129,7 +155,7 @@ export class Board3D {
     const { family, keyWeight, countWeight, countFamily = family } = config.text;
     const fonts = [`${keyWeight} 16px ${family}`, `${countWeight} 16px ${countFamily}`];
     await Promise.all(fonts.map((font) => {
-      if (!this.fontLoads.has(font)) this.fontLoads.set(font, document.fonts.load(font, 'Backspace0123456789'));
+      if (!this.fontLoads.has(font)) this.fontLoads.set(font, document.fonts.load(font, 'Backspace0123456789←↑→↓键'));
       return this.fontLoads.get(font);
     }));
     if (request !== this.themeRequest) return;
@@ -139,6 +165,7 @@ export class Board3D {
     this.config = config;
     this.accent = accent;
     this.coldColor = resolveColor(config.cap.color, accent);
+    this.coldTop = config.cap.coldTop ? new THREE.Color(config.cap.coldTop) : null;
     this.scene.background = config.background === null ? null : new THREE.Color(resolveColor(config.background, accent));
     this.camera.fov = config.fov ?? 26;
     const [minPolarAngle, maxPolarAngle] = config.polarRange ?? [0.12, 1.12];
@@ -147,9 +174,10 @@ export class Board3D {
     this.renderer.setPixelRatio(this.pixelRatio());
     this.setLighting(config.lighting ?? {});
     if (config.bloom) {
+      const { strength, radius, threshold } = config.bloom;
       this.composer = new EffectComposer(this.renderer);
       this.composer.addPass(new RenderPass(this.scene, this.camera));
-      this.composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), 0.8, 0.4, 0.55));
+      this.composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), strength, radius, threshold));
       this.composer.addPass(new OutputPass());
     }
     this.resize(true);
@@ -241,8 +269,10 @@ export class Board3D {
       this.board.add(slot);
     }
     if (base.rim) {
+      const rim = new THREE.Color(this.accent).lerp(new THREE.Color(0xffffff), 0.2);
+      const lightness = 0.2126 * rim.r + 0.7152 * rim.g + 0.0722 * rim.b;
       const material = new THREE.MeshStandardMaterial({
-        color: this.accent, emissive: this.accent, emissiveIntensity: 1.35,
+        color: this.accent, emissive: rim, emissiveIntensity: 1.8 / lightness,
       });
       for (const direction of [-1, 1]) {
         const horizontal = new THREE.Mesh(new THREE.BoxGeometry(w - 0.15, 0.028, 0.034), material);
@@ -281,6 +311,7 @@ export class Board3D {
       }
       const shape = geometries.get(size);
       const material = boxMaterial(cap, this.coldColor, gradient);
+      const face = paintableTop(material, this.coldColor, this.coldTop);
       const mesh = new THREE.Mesh(shape.geometry, material);
       const top = (this.config.base?.height ?? 0) + 0.01;
       mesh.position.set(key.x + key.w / 2 - this.width / 2, top + cap.height / 2, key.y + key.h / 2 - this.depth / 2);
@@ -314,9 +345,10 @@ export class Board3D {
       mesh.add(label);
       this.board.add(mesh);
       const item = {
-        key, mesh, material, canvas, context, texture, top,
+        key, mesh, material, face, canvas, context, texture, top,
         count: 0, t: 0, pressedAt: null, signature: null,
         color: new THREE.Color(this.coldColor), glow: new THREE.Color(), glowIntensity: 0,
+        height: cap.height, targetHeight: cap.height,
         opacity: cap.opacity,
       };
       mesh.userData.item = item;
@@ -332,7 +364,7 @@ export class Board3D {
     item.signature = signature;
     const { context, canvas } = item;
     const { width, height } = canvas;
-    const { family, keyWeight, countFamily = family, countWeight, keySize = 36, countSize = 32, softCount } = this.config.text;
+    const { family, keyWeight, countFamily = family, countWeight, keySize = 42, countSize = 36, softCount } = this.config.text;
     const margin = LABEL_PIXELS * 0.06;
     const available = width - margin * 2;
     context.clearRect(0, 0, width, height);
@@ -342,17 +374,16 @@ export class Board3D {
     fitFont(context, item.key.label, family, keyWeight, keySize, available);
     context.fillText(item.key.label, margin, margin, available);
 
-    const number = countLabel(item.count);
-    context.textAlign = 'right';
-    context.textBaseline = 'bottom';
-    if (softCount) {
-      context.fillStyle = dark ? 'rgba(255,255,255,0.85)' : item.count ? '#6e6e73' : '#b8b8bd';
-    } else {
-      context.globalAlpha = item.count ? 0.85 : 0.6;
+    if (item.count) {
+      const number = countLabel(item.count);
+      context.textAlign = 'right';
+      context.textBaseline = 'bottom';
+      if (softCount) context.fillStyle = dark ? 'rgba(255,255,255,0.85)' : '#6e6e73';
+      else if (!this.config.bloom) context.globalAlpha = 0.85;
+      fitFont(context, number, countFamily, countWeight, countSize, available);
+      context.fillText(number, width - margin, height - LABEL_PIXELS * 0.05, available);
+      context.globalAlpha = 1;
     }
-    fitFont(context, number, countFamily, countWeight, countSize, available);
-    context.fillText(number, width - margin, height - LABEL_PIXELS * 0.05, available);
-    context.globalAlpha = 1;
     item.texture.needsUpdate = true;
     return true;
   }
@@ -371,24 +402,33 @@ export class Board3D {
       item.count = count;
       item.t = t;
       item.heatColor = color;
-      item.color.set(count && !bloom ? color : this.coldColor);
+      item.color.set(count ? color : this.coldColor);
+      item.targetHeight = cap.height + (count ? t * MAX_HEAT_LIFT : 0);
       if (count && (heatGlow || bloom)) item.glow.set(color).multiplyScalar(bloom ? 1 : heatGlow * t);
       else item.glow.copy(ZERO_GLOW);
-      item.glowIntensity = count ? 0.4 + 1.6 * t : 0;
+      item.glowIntensity = count ? 0.27 + 0.45 * t : 0;
       if (cap.opacity !== undefined) item.opacity = cap.opacity + t * (0.9 - cap.opacity);
       changed = this.drawLabel(item, dark, foreground) || changed;
-      if (!motion) this.applyColor(item, 1);
+      if (!motion) this.applyVisual(item, 1);
     }
     if (motion && changed) this.stylesUntil = now + 600;
     if (!motion) this.stylesUntil = 0;
     this.dirty ||= changed || !motion;
   }
 
-  applyColor(item, blend) {
-    const material = item.material;
-    material.color.lerp(item.color, blend);
+  applyVisual(item, blend) {
+    const { material, face } = item;
+    if (!this.config.bloom) material.color.lerp(item.color, blend);
     material.emissive?.lerp(item.glow, blend);
     if (item.opacity !== undefined) material.opacity += (item.opacity - material.opacity) * blend;
+    if (face) {
+      const hasCount = item.count > 0;
+      const topColor = hasCount ? item.color : this.coldTop ?? item.color;
+      face.color.value.lerp(topColor, blend);
+      const coverage = hasCount || this.coldTop ? 1 : 0;
+      face.coverage.value += (coverage - face.coverage.value) * blend;
+    }
+    item.height += (item.targetHeight - item.height) * blend;
   }
 
   pixelRatio() {
@@ -398,13 +438,13 @@ export class Board3D {
   fit() {
     const halfVertical = Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
     const halfHorizontal = halfVertical * this.camera.aspect;
-    const polar = this.config.polar ?? 0.64;
+    const polar = this.config.polar ?? 0.55;
     const cos = Math.cos(polar);
     const sin = Math.sin(polar);
     const { base, cap, press } = this.config;
     const width = this.width + (base ? 0.9 : 0);
     const depth = this.depth + (base ? 0.9 : 0);
-    const height = (base?.height ?? 0) + cap.height * (press.type === 'squash' ? 1.05 : 1) + 0.045;
+    const height = (base?.height ?? 0) + (cap.height + MAX_HEAT_LIFT) * (press.type === 'squash' ? 1.05 : 1) + 0.045;
     const target = this.controls.target.set(0, 0.35, 0.25);
 
     // 前沿比中心离镜头更近。用边界的透视投影保证底座也留有画布边距。
@@ -501,7 +541,7 @@ export class Board3D {
       const elapsed = Math.max(0, time - item.pressedAt);
       if (press.type === 'sink') sink = press.depth * Math.pow(0.8, elapsed / FRAME_MS);
       if (press.type === 'step' && elapsed < press.duration) sink = press.depth;
-      if (press.type === 'glow') glow = 1.5 * Math.pow(0.82, elapsed / FRAME_MS);
+      if (press.type === 'glow') glow = 0.28 * Math.pow(0.82, elapsed / FRAME_MS);
       if (press.type === 'ink') ink = elapsed < press.duration;
       if (press.type === 'squash') {
         if (elapsed < 115) scale = 1.05 - 0.35 * Math.pow(1 - elapsed / 115, 3);
@@ -512,9 +552,10 @@ export class Board3D {
         sink = glow = 0;
       }
     }
-    item.mesh.scale.y = scale;
-    item.mesh.position.y = item.top + this.config.cap.height * scale / 2 - sink + (this.hover === item ? HOVER_LIFT : 0);
-    if (this.config.bloom) item.material.emissiveIntensity = item.glowIntensity + glow;
+    const height = item.height * scale;
+    item.mesh.scale.y = height / this.config.cap.height;
+    item.mesh.position.y = item.top + height / 2 - sink + (this.hover === item ? HOVER_LIFT : 0);
+    if (this.config.bloom) item.material.emissiveIntensity = Math.min(1, item.glowIntensity + glow);
     if (press.type === 'ink') item.material.color.copy(ink ? INK : item.color);
   }
 
@@ -529,7 +570,7 @@ export class Board3D {
       const blend = time < this.stylesUntil ? 1 - Math.pow(0.84, frames) : 1;
       if (blend === 1) this.stylesUntil = 0;
       for (const item of this.items) {
-        if (styleChanged) this.applyColor(item, blend);
+        if (styleChanged) this.applyVisual(item, blend);
         this.changePose(item, time);
       }
       this.dirty = false;

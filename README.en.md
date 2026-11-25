@@ -12,7 +12,9 @@
   <p><a href="README.md">🌐 简体中文</a></p>
 </div>
 
-[![A preview of three KeyHeat3D themes](docs/screenshots/overview.png)](docs/screenshots/README.md)
+[![KeyHeat3D's 3D keyboard heatmap in the Paper & Ink theme](docs/screenshots/hero-3d.png)](docs/screenshots/README.md)
+
+In this example, **A** was the most-used key out of 3,923 presses today.
 
 KeyHeat3D is a Windows desktop app that shows how often you use each key and mouse button. Explore your activity as an interactive 3D keyboard or a flat 2D heatmap. The app interface is in Simplified Chinese.
 
@@ -22,12 +24,14 @@ Download the portable Windows x64 EXE and double-click it to run. [GitHub Releas
 
 ## Screenshots
 
+[![3D previews of the Glass, Apple-inspired, and Paper & Ink themes](docs/screenshots/overview.png)](docs/screenshots/README.md)
+
 [View all nine themes in 3D and 2D](docs/screenshots/README.md)
 
 ## Features
 
-- Nine themes with distinct 3D keycap materials and matching 2D views. Choose Apple-inspired, Glass, Widgets, Paper & Ink, Pixel, Cyberpunk, Win9x, Clay, or LCD, and pair any theme with one of eight accent colors.
-- Five keyboard layouts (104-key, TKL, 75%, 65%, and 60%) with counts on the keycaps. Rotate and zoom in 3D, or switch to 2D.
+- Nine themes with their own default palettes and matching 3D and 2D views. Choose Apple-inspired, Glass, Widgets, Paper & Ink, Pixel, Cyberpunk, Win9x, Clay, or LCD. You can also apply one of eight accent colors across all themes.
+- Five keyboard layouts (104-key, TKL, 75%, 65%, and 60%). In 3D, frequently used keys sit higher and their colors match the heat legend. Drag to rotate, scroll to zoom, or switch to 2D.
 - Separate counts for left and right modifier keys and for all five mouse buttons. Holding a key counts as one press.
 - Date filters, linear and logarithmic heat scales, key rankings, and a 24-hour activity chart. Hover over a key to see its count, share, and rank.
 - Export hourly counts as CSV. Close the window to keep counting in the system tray, where you can reopen the app, pause counting, save, or quit.

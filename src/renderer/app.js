@@ -1,5 +1,5 @@
 import { THEMES } from './themes/index.js';
-import { ACCENTS, RANGE_LABELS, footer, luminance, mix, shade, stage, tint } from './themes/shared.js';
+import { ACCENTS, RANGE_LABELS, THEME_ACCENTS, footer, luminance, mix, shade, stage, tint } from './themes/shared.js';
 
 const api = window.keyheat;
 const root = document.getElementById('app');
@@ -14,13 +14,16 @@ const modifiers = [
   ['Alt', 'Alt', 'AltRight'], ['Win', 'Meta', 'MetaRight'],
 ];
 const themeIds = Object.keys(THEMES);
+const VISIBLE_REFRESH_MS = 400;
+const HIDDEN_REFRESH_MS = 2000;
 const date = new Date();
 const weekAgo = new Date(date);
 weekAgo.setDate(weekAgo.getDate() - 6);
+const savedAccent = localStorage.getItem('accent');
 
 const state = {
   theme: themeIds.includes(localStorage.getItem('theme')) ? localStorage.getItem('theme') : 'apple',
-  accent: ACCENTS.some(([, color]) => color === localStorage.getItem('accent')) ? localStorage.getItem('accent') : ACCENTS[0][1],
+  accentOverride: ACCENTS.some(([, color]) => color === savedAccent) ? savedAccent : null,
   layout: init.layouts.some(({ id }) => id === localStorage.getItem('layout')) ? localStorage.getItem('layout') : init.layouts[0].id,
   view: localStorage.getItem('view') === '2d' ? '2d' : '3d',
   scale: localStorage.getItem('scale') === 'linear' ? 'linear' : 'log',
@@ -29,6 +32,7 @@ const state = {
   toDate: ymd(date),
   showAll: false,
   paused: init.paused,
+  statsStatus: 'loading',
   counts: {},
   hours: new Array(24).fill(0),
   keyboard: [],
@@ -47,7 +51,7 @@ const slots = (id) => root.querySelectorAll(`[data-s="${id}"]`);
 const text = (id, value) => slots(id).forEach((el) => { el.textContent = value; });
 const html = (id, value) => slots(id).forEach((el) => { el.innerHTML = value; });
 const theme = () => THEMES[state.theme];
-const accent = () => state.theme === 'apple' && state.accent === ACCENTS[0][1] ? '#0071e3' : state.accent;
+const accent = () => state.accentOverride ?? THEME_ACCENTS[state.theme];
 const layout = () => init.layouts.find(({ id }) => id === state.layout);
 const groupTotal = (rows) => rows.reduce((total, [, value]) => total + value, 0);
 const count = (id) => state.counts[id] || 0;
@@ -96,7 +100,7 @@ function normalize(value, max) {
 function colorAt(t) {
   const stops = theme().ramp(accent());
   const steps = theme().quantize;
-  const level = steps ? Math.max(1, Math.ceil(t * steps)) / steps : t;
+  const level = steps > 1 ? (Math.max(1, Math.ceil(t * steps)) - 1) / (steps - 1) : t;
   const position = Math.min(1, Math.max(0, level)) * (stops.length - 1);
   const lower = Math.min(Math.floor(position), stops.length - 2);
   return mix(stops[lower], stops[lower + 1], position - lower);
@@ -136,8 +140,16 @@ function hourName(hour) {
 
 function rankRows() {
   const shown = new Set(layout().keys.flatMap((key) => key.ids));
-  const entries = state.showAll ? state.keyboard : state.keyboard.slice(0, theme().rankN || 10);
+  const rankLimit = theme().rankN ?? 10;
+  const canExpand = Boolean(slot('rank')) && state.keyboard.length > rankLimit;
+  const entries = state.showAll ? state.keyboard : state.keyboard.slice(0, rankLimit);
   const top = entries[0]?.[1] || 1;
+  const condensed = canExpand && !state.showAll;
+  const rankedShare = share(groupTotal(entries), state.keyboardTotal);
+  text('rankTitle', condensed ? `前 ${rankLimit} 个键占了 ${Math.round(rankedShare * 100)}% 的按键` : '按键排行');
+  text('rankSub', state.keyboard.length ? `${RANGE_LABELS[state.range][1]}共用到 ${number(state.keyboard.length)} 个键` : '');
+  const empty = state.statsStatus === 'loading' ? '正在读取按键记录…' :
+    state.statsStatus === 'error' ? '暂时无法读取按键记录' : '还没有按键记录';
   const itemName = (id) => {
     const off = shown.has(id) ? '' : '<small class="off-layout"> · 当前布局未显示</small>';
     return `<span>${esc(nameOf(id))}${off}</span>`;
@@ -145,14 +157,14 @@ function rankRows() {
   html('rank', entries.length ? entries.map(([id, n], index) => `<li><span class="n">${index + 1}</span>
     <span class="nm">${itemName(id)}<span class="bar"><i style="width:${n / top * 100}%"></i></span></span>
     <span class="cnt">${number(n)}</span><span class="pct">${percent(n, state.keyboardTotal)}</span></li>`).join('') :
-    '<li class="empty">还没有数据</li>');
+    `<li class="empty">${empty}</li>`);
   html('rankTable', `<thead><tr><th>#</th><th>按键</th><th class="r">次数</th><th class="r">占比</th></tr></thead><tbody>${
     state.keyboard.map(([id, n], index) => `<tr><td>${index + 1}</td><td>${itemName(id)}</td>
       <td class="r">${number(n)}</td><td class="r">${percent(n, state.keyboardTotal)}</td></tr>`).join('')
-  }${state.keyboard.length ? '' : '<tr><td colspan="4">还没有数据</td></tr>'}</tbody>`);
+  }${state.keyboard.length ? '' : `<tr><td colspan="4">${empty}</td></tr>`}</tbody>`);
   const expand = root.querySelector('[data-a="rank-expand"]');
   if (expand) {
-    expand.hidden = state.keyboard.length <= (theme().rankN || 10);
+    expand.hidden = !canExpand;
     expand.textContent = state.showAll ? '收起' : `显示全部 ${state.keyboard.length} 个键`;
     expand.setAttribute('aria-expanded', String(state.showAll));
   }
@@ -161,8 +173,8 @@ function rankRows() {
 function renderHours() {
   const max = Math.max(0, ...state.hours);
   const peak = max ? state.hours.indexOf(max) : -1;
-  text('hoursTitle', max ? `${hourName(peak)}最忙` : '还没有按键时段记录');
-  text('hoursSub', `这个小时段共 ${number(max)} 次，占 ${Math.round(share(max, state.keyboardTotal) * 100)}%`);
+  text('hoursTitle', max ? `${hourName(peak)}最忙` : '按键时段');
+  text('hoursSub', max ? `这个小时段共 ${number(max)} 次，占 ${Math.round(share(max, state.keyboardTotal) * 100)}%` : '还没有可显示的时段记录');
   html('hours', state.hours.map((n, h) => `<i class="${h === peak ? 'peak' : ''}"
     style="height:${Math.max(2, share(n, max) * 100)}%" title="${h}:00–${h}:59 · ${number(n)} 次"></i>`).join(''));
 }
@@ -180,7 +192,7 @@ function renderModifiers() {
     return `<div class="md mod"><span>${name}</span><div class="trk" title="左 ${number(a)} · 右 ${number(b)}">${labels}</div></div>`;
   }).join(''));
   text('modsTitle', total ? `左手修饰键占 ${Math.round(left / total * 100)}%` : '修饰键还没按过');
-  return share(left, total);
+  return left;
 }
 
 function renderMouse(label) {
@@ -189,7 +201,7 @@ function renderMouse(label) {
   const ordered = Object.keys(mouseNames).map((id) => [id, count(id)]).sort((a, b) => b[1] - a[1]);
   const fill = (id) => `class="mz z" data-m="${id}" style="fill:${color(id)}"`;
   text('mouseTitle', max ? `${mouseNames[first] || nameOf(first)}占 ${Math.round(max / state.mouseTotal * 100)}%` : '鼠标还没点过');
-  text('mouseSub', `${label}共点击 ${number(state.mouseTotal)} 次`);
+  text('mouseSub', max ? `${label}共点击 ${number(state.mouseTotal)} 次` : '');
   const diagram = state.theme === 'apple' ? `
     <defs><clipPath id="apple-mouse-outline"><rect x="14" y="4" width="80" height="150" rx="40"/></clipPath></defs>
     <rect ${fill('Mouse4')} x="7" y="80" width="10" height="20" rx="3"/>
@@ -214,11 +226,11 @@ function renderMouse(label) {
   </ul></div>`);
 }
 
-function rings(values) {
+function rings(metrics, total) {
   const radii = [52, 39, 26];
-  const labels = ['字母键', '前 10 个键', '左手修饰键'];
   const colors = [accent(), tint(accent(), 0.42), shade(accent(), 0.3)];
-  const circles = values.map((value, i) => {
+  const circles = metrics.map(([, amount], i) => {
+    const value = share(amount, total);
     const radius = radii[i];
     const circumference = 2 * Math.PI * radius;
     return `<circle cx="60" cy="60" r="${radius}" stroke="${colors[i]}" stroke-opacity=".16"/>
@@ -226,22 +238,24 @@ function rings(values) {
         stroke-dasharray="${circumference * value} ${circumference}"/>` : ''}`;
   }).join('');
   return `<svg viewBox="0 0 120 120" aria-hidden="true"><g transform="rotate(-90 60 60)" fill="none" stroke-width="10" stroke-linecap="round">
-    ${circles}</g></svg><div><h4>按键都花在哪</h4><ul>${values.map((value, i) =>
-      `<li style="--rc:${colors[i]}"><b>${Math.round(value * 100)}%</b>${labels[i]}</li>`).join('')}</ul></div>`;
+    ${circles}</g></svg><div><h4>按键占比</h4><small class="ring-denominator">占键盘按键总数，各项可重叠</small>
+    <ul>${metrics.map(([label, amount], i) =>
+      `<li style="--rc:${colors[i]}"><b>${total ? `${Math.round(share(amount, total) * 100)}%` : '—'}</b><span>${label}</span></li>`).join('')}</ul></div>`;
 }
 
 function gauge(value) {
   const active = Math.round(value * 48);
+  const label = state.keyboardTotal ? `${Math.round(value * 100)}%` : '—';
   const marks = Array.from({ length: 48 }, (_, i) => `<rect x="58.5" y="4" width="3" height="11" rx="1"
     transform="rotate(${i * 7.5} 60 60)" fill="${i < active ? accent() : '#1c2440'}"${i < active ? ' class="lit"' : ''}/>`).join('');
-  return `<svg viewBox="0 0 120 120" role="img" aria-label="前 10 键占比 ${Math.round(value * 100)}%">
-    ${marks}<text x="60" y="62" text-anchor="middle" font-family="Orbitron,sans-serif" font-weight="900" font-size="22" fill="#fff">${Math.round(value * 100)}%</text>
+  return `<svg viewBox="0 0 120 120" role="img" aria-label="前 10 键占比 ${label}">
+    ${marks}<text x="60" y="62" text-anchor="middle" font-family="Orbitron,sans-serif" font-weight="900" font-size="22" fill="#fff">${label}</text>
     <text x="60" y="80" text-anchor="middle" font-size="9" fill="#98a5cb">前 10 键占比</text></svg>`;
 }
 
 function pie() {
-  if (!state.keyboardTotal) return '<p>还没有数据</p>';
-  const colors = [accent(), '#008080', '#ffcc00', '#c00000', '#808000', '#c0c0c0'];
+  if (!state.keyboardTotal) return '<p>还没有按键记录</p>';
+  const colors = [accent(), '#008080', '#ffcc00', '#c00000', '#808000', '#363743'];
   const entries = state.keyboard.slice(0, 5);
   if (state.keyboard.length > 5) entries.push(['其他', state.keyboardTotal - groupTotal(entries)]);
   let offset = 0;
@@ -265,44 +279,71 @@ const segmentRects = {
 };
 
 function digitDisplay(total) {
-  const digits = String(total).padStart(7, ' ');
+  const digits = String(total ?? '').padStart(7, ' ');
   const rects = Array.from(digits, (digit, i) => Object.entries(segmentRects).map(([segment, [x, y, w, h]]) => {
     const lit = digit !== ' ' && sevenSegments[Number(digit)].includes(segment);
     return `<rect x="${i * 14 + x}" y="${y}" width="${w}" height="${h}" rx=".8" style="fill:var(--ink);fill-opacity:${lit ? 1 : 0.08}"/>`;
   }).join('')).join('');
-  return `<svg class="seg7" viewBox="-1 -1 ${digits.length * 14} 22" role="img" aria-label="${number(total)}">
+  return `<svg class="seg7" viewBox="-1 -1 ${digits.length * 14} 22" role="img" aria-label="${total === null ? '暂无按键总数' : number(total)}">
     <g transform="skewX(-6) translate(2 0)">${rects}</g></svg>`;
+}
+
+function updateDate() {
+  const element = slot('date');
+  if (!element) return;
+  const now = new Date();
+  const label = `${now.getMonth() + 1}月${now.getDate()}日 星期${'日一二三四五六'[now.getDay()]}`;
+  if (element.textContent !== label) element.textContent = label;
+}
+
+function updateStageHint() {
+  const now = Date.now();
+  const [from, to] = rangeMs();
+  const coversNow = from <= now && now <= to;
+  const prompt = slot('pixelIdle');
+  if (prompt) prompt.hidden = state.statsStatus !== 'ready' || state.paused || !coversNow || state.keyboardTotal > 0 || state.mouseTotal > 0;
+  let message = state.view === '3d' ? '键帽越高，按得越多 · 拖动旋转，滚轮缩放' : '悬停查看次数、占比和排名';
+  if (state.statsStatus === 'loading') message = '正在读取本机记录…';
+  else if (state.statsStatus === 'error') message = '读取统计失败，稍后重试';
+  else if (!state.keyboardTotal) {
+    if (!coversNow) message = '所选日期内没有按键记录';
+    else if (state.paused) message = '继续记录后，按下任意键即可开始';
+    else message = '按下任意键，即可看到键位热度';
+  }
+  const hint = slot('hint');
+  if (hint && hint.textContent !== message) hint.textContent = message;
 }
 
 function paintSide() {
   const [id, n] = state.keyboard[0] || ['', 0];
   const total = state.keyboardTotal;
   const label = RANGE_LABELS[state.range][1];
-  const topShare = share(groupTotal(state.keyboard.slice(0, 10)), total);
-  const now = new Date();
-  text('total', number(total));
+  const ready = state.statsStatus === 'ready';
+  const shownNumber = (value) => ready ? number(value) : '—';
+  text('total', shownNumber(total));
   text('rlabel', label);
-  text('mouseTotal', number(state.mouseTotal));
-  text('keysUsed', number(state.keyboard.length));
+  text('mouseTotal', shownNumber(state.mouseTotal));
+  text('keysUsed', shownNumber(state.keyboard.length));
   text('topName', id ? nameOf(id) : '—');
   text('topGlyph', id ? (init.layouts[0].keys.find(({ ids }) => ids.includes(id))?.label || nameOf(id)) : '—');
   text('topCount', id ? `${number(n)} 次 · ${percent(n, total)}` : '—');
-  text('date', `${now.getMonth() + 1}月${now.getDate()}日 星期${'日一二三四五六'[now.getDay()]}`);
+  updateDate();
   html('lede', id ? `${label}最常用的是 <b>${esc(nameOf(id))}</b>，${number(n)} 次，占 ${percent(n, total)}。鼠标点击 <b>${number(state.mouseTotal)}</b> 次。` :
-    `${label}还没有按键记录。`);
-  text('rankTitle', `前 10 个键占了 ${Math.round(topShare * 100)}% 的按键`);
-  text('rankSub', `${label}共用到 ${number(state.keyboard.length)} 个键`);
+    ready ? `${label}还没有按键记录。` : '');
   rankRows();
   renderHours();
   const left = renderModifiers();
   renderMouse(label);
   if (slot('rings')) {
+    const limit = theme().rankN;
     const letters = groupTotal(state.keyboard.filter(([key]) => /^[A-Z]$/.test(key)));
-    html('rings', rings([share(letters, total), topShare, left]));
+    const leading = groupTotal(state.keyboard.slice(0, limit));
+    html('rings', rings([['字母键', letters], [`前 ${limit} 个键`, leading], ['左侧修饰键', left]], total));
   }
-  if (slot('gauge')) html('gauge', gauge(topShare));
+  if (slot('gauge')) html('gauge', gauge(share(groupTotal(state.keyboard.slice(0, 10)), total)));
   if (slot('pie')) html('pie', pie());
-  if (slot('seg7')) html('seg7', digitDisplay(total));
+  if (slot('seg7')) html('seg7', digitDisplay(ready ? total : null));
+  updateStageHint();
 }
 
 let board2D = [];
@@ -423,8 +464,9 @@ function paintBoards(animate = false) {
     element.style.setProperty('--hc', visual.color);
     element.style.setProperty('--fg', visual.foreground);
     element.style.setProperty('--t', visual.t.toFixed(3));
-    if (countLabel.textContent !== shortCount(visual.count)) {
-      countLabel.textContent = shortCount(visual.count);
+    const countText = visual.count ? shortCount(visual.count) : '';
+    if (countLabel.textContent !== countText) {
+      countLabel.textContent = countText;
       if (state.view === '2d') fitText(countLabel);
     }
     item.count = visual.count;
@@ -501,7 +543,6 @@ function syncControls() {
   slot('stage').dataset.view = state.view;
   slot('view3d').hidden = state.view !== '3d';
   slot('view2d').hidden = state.view !== '2d';
-  text('hint', state.view === '3d' ? '拖动旋转，滚轮缩放' : '悬停查看次数、占比和排名');
   updatePause(state.paused);
   sizeBoard();
 }
@@ -511,6 +552,7 @@ function updatePause(paused) {
   root.classList.toggle('paused', paused);
   text('pzt', paused ? '已暂停 · 点击继续' : '正在记录');
   text('pzt2', paused ? '已暂停' : '正在记录');
+  updateStageHint();
 }
 
 function applyAccent() {
@@ -541,6 +583,7 @@ function fitAfterFonts() {
 function renderTheme(fade = true) {
   hideTip();
   resetScene();
+  document.body.dataset.theme = state.theme;
   root.className = `th th-${state.theme}`;
   root.innerHTML = theme().template();
   const placeholder = slot('kb');
@@ -574,10 +617,15 @@ let menuAnchor = null;
 
 function paintMenu() {
   menu.innerHTML = `<div class="themes-grid">${themeIds.map((id) => `<button type="button" data-theme="${id}"
-    aria-pressed="${id === state.theme}" title="${esc(THEMES[id].desc)}"><span class="theme-thumb thumb-${id}" aria-hidden="true">
+    aria-pressed="${id === state.theme}" title="${esc(THEMES[id].desc)}"><span class="theme-thumb thumb-${id}"
+    style="--thumb-accent:${THEME_ACCENTS[id]}" aria-hidden="true">
       <i></i><b><i></i><i></i><i></i><i></i><i></i></b></span><span>${esc(THEMES[id].name)}</span></button>`).join('')}</div>
-    <div class="accents" aria-label="强调色">${ACCENTS.map(([label, color]) => `<button type="button" data-accent="${color}"
-      aria-label="${label}" aria-pressed="${color === state.accent}" title="${label}" style="--color:${color}"></button>`).join('')}</div>`;
+    <div class="accent-controls" role="group" aria-label="强调色">
+      <button type="button" class="accent-default" data-a="accent-default" aria-pressed="${state.accentOverride === null}"
+        style="--color:${THEME_ACCENTS[state.theme]}"><i class="accent-dot" aria-hidden="true"></i>主题默认</button>
+      <div class="accents" role="group" aria-label="全局强调色">${ACCENTS.map(([label, color]) => `<button type="button" data-accent="${color}"
+        aria-label="${label}" aria-pressed="${color === state.accentOverride}" title="${label}" style="--color:${color}"></button>`).join('')}</div>
+    </div>`;
 }
 
 function closeMenu(focus = false) {
@@ -608,7 +656,7 @@ function openMenu(button) {
 menu.addEventListener('click', (event) => {
   const button = event.target.closest('button');
   if (!button) return;
-  const { theme: id, accent: color } = button.dataset;
+  const { theme: id, accent: color, a: action } = button.dataset;
   if (id) {
     closeMenu();
     if (id !== state.theme) {
@@ -617,12 +665,15 @@ menu.addEventListener('click', (event) => {
       renderTheme();
     }
     root.querySelector('[data-a="theme"]')?.focus({ preventScroll: true });
-  } else if (color) {
-    state.accent = color;
-    localStorage.setItem('accent', color);
+  } else if (color || action === 'accent-default') {
+    const override = color ?? null;
+    if (override === state.accentOverride) return;
+    state.accentOverride = override;
+    if (override) localStorage.setItem('accent', override);
+    else localStorage.removeItem('accent');
     applyAccent();
     paintMenu();
-    menu.querySelector('[data-accent][aria-pressed="true"]')?.focus({ preventScroll: true });
+    menu.querySelector('.accent-controls [aria-pressed="true"]')?.focus({ preventScroll: true });
     resetScene();
     paintSide();
     paintBoards();
@@ -652,6 +703,14 @@ let refreshId = 0;
 let pending = false;
 let shouldAnimate = false;
 let statusRevision = 0;
+let refreshTimer;
+
+function statsChanged(perKey, hourOfDay) {
+  if (state.statsStatus !== 'ready') return true;
+  const keys = Object.keys(perKey);
+  return keys.length !== Object.keys(state.counts).length || keys.some((key) => perKey[key] !== state.counts[key]) ||
+    hourOfDay.some((value, hour) => value !== state.hours[hour]);
+}
 
 async function refresh(timer = false) {
   if (pending && timer) return;
@@ -659,18 +718,31 @@ async function refresh(timer = false) {
   const pauseAtStart = statusRevision;
   pending = true;
   try {
+    const now = Date.now();
     const [from, to] = rangeMs();
     const result = await api.getStats(from, to);
     if (id !== refreshId) return;
+    if (pauseAtStart === statusRevision && result.paused !== state.paused) updatePause(result.paused);
+    if (!statsChanged(result.perKey, result.hourOfDay)) {
+      updateDate();
+      updateStageHint();
+      return;
+    }
     state.counts = result.perKey;
     state.hours = result.hourOfDay;
-    if (pauseAtStart === statusRevision) updatePause(result.paused);
+    state.statsStatus = 'ready';
     summarize();
     paintSide();
-    paintBoards(timer && shouldAnimate);
+    paintBoards(timer && shouldAnimate && !document.hidden && from <= now && now <= to);
     shouldAnimate = true;
   } catch (error) {
-    if (id === refreshId) console.error('刷新统计失败', error);
+    if (id === refreshId) {
+      if (state.statsStatus === 'loading') {
+        state.statsStatus = 'error';
+        paintSide();
+      }
+      console.error('刷新统计失败', error);
+    }
   } finally {
     if (id === refreshId) pending = false;
   }
@@ -678,9 +750,15 @@ async function refresh(timer = false) {
 
 function chooseRange(range) {
   state.range = range;
+  state.statsStatus = 'loading';
+  state.counts = {};
+  state.hours = new Array(24).fill(0);
   shouldAnimate = false;
+  summarize();
   hideTip();
   syncControls();
+  paintSide();
+  paintBoards();
   refresh();
 }
 
@@ -765,6 +843,17 @@ api.onStatus(({ paused }) => {
   statusRevision++;
   updatePause(paused);
 });
+
+function scheduleRefresh() {
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => refresh(true), document.hidden ? HIDDEN_REFRESH_MS : VISIBLE_REFRESH_MS);
+}
+
+document.addEventListener('visibilitychange', () => {
+  scheduleRefresh();
+  if (!document.hidden) refresh(true);
+});
+
 renderTheme(false);
 await refresh();
-setInterval(() => refresh(true), 2000);
+scheduleRefresh();

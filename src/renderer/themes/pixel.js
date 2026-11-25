@@ -1,5 +1,7 @@
-import { blocks, ctlL, ranges, shade, tint } from './shared.js';
+import { blocks, ctlL, ranges, shade, THEME_ACCENTS, tint } from './shared.js';
 import { THREE_PRESETS } from './three-presets.js';
+
+const WARM_PALETTE = ['#1d2b53', '#7e2553', '#ff004d', '#ffa300', '#ffec27'];
 
 export default {
   id: 'pixel',
@@ -12,7 +14,7 @@ export default {
       <div class="px-cell"><span>CLICK 鼠标</span><b class="num" data-s="mouseTotal"></b></div>
       <div class="px-cell"><span>KEYS 用到</span><b class="num" data-s="keysUsed"></b></div>
     </div>
-    <div class="px-bar">${ranges()}${ctlL()}<span class="px-blink">PRESS ANY KEY</span></div>
+    <div class="px-bar">${ranges()}${ctlL()}<span class="px-blink" data-s="pixelIdle" hidden>PRESS ANY KEY</span></div>
     <section class="px-frame px-kb"><div class="kbwrap" data-s="kb"></div></section>
     <div class="px-cols">
       <section class="px-frame">${blocks.rank()}</section>
@@ -22,12 +24,14 @@ export default {
         <section class="px-frame">${blocks.mouse()}</section>
       </div>
     </div>`,
-  ramp: (accent) => ['#3b4a7a', shade(accent, .45), accent, tint(accent, .55)],
+  ramp: (accent) => accent === THEME_ACCENTS.pixel ? WARM_PALETTE :
+    [shade(accent, .6), shade(accent, .35), accent, tint(accent, .26), tint(accent, .55)],
   fgDark: '#000000',
   fgLight: '#ffffff',
   keyMax: 38,
-  quantize: 4,
+  quantize: WARM_PALETTE.length,
   rankN: 10,
   zeroMouse: '#29366f',
+  cold2d: '#29366f',
   three: THREE_PRESETS.pixel,
 };
