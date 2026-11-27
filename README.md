@@ -108,6 +108,6 @@ KeyHeat3D/
 
 ## 许可证
 
-[MIT](LICENSE)
+[PolyForm Noncommercial 1.0.0](LICENSE)
 
 免安装版使用 libuiohook（LGPL-3.0-or-later）。对应源码、许可文本和重建步骤见[第三方许可说明](THIRD_PARTY_NOTICES.md)。
