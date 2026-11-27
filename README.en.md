@@ -55,4 +55,4 @@ Run `npm run dist` to build the portable EXE in `dist\`. Run `npm start -- --hid
 
 ## License
 
-KeyHeat3D is licensed under the MIT License. The portable build includes libuiohook under LGPL-3.0-or-later. See the third-party notices for license texts, corresponding source, and rebuild instructions. [MIT License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md)
+KeyHeat3D is licensed under the PolyForm Noncommercial License 1.0.0. The portable build includes libuiohook under LGPL-3.0-or-later. See the third-party notices for license texts, corresponding source, and rebuild instructions. [PolyForm Noncommercial 1.0.0](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md)
